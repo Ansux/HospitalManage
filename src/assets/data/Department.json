@@ -1,0 +1,5 @@
+{
+  "Status": true,
+  "Message": "success",
+  "Data": "{\"TotalPage\":1,\"ResultList\":\"[{\\\"Row\\\":1,\\\"DepartId\\\":\\\"104003\\\",\\\"DepartName\\\":\\\"衡山县白果镇中心卫生院\\\",\\\"AnotherName\\\":\\\"\\\",\\\"IsValid\\\":false,\\\"CreateTime\\\":\\\"2016-10-20 10:44:48\\\",\\\"IsSampleDep\\\":true},{\\\"Row\\\":2,\\\"DepartId\\\":\\\"104004\\\",\\\"DepartName\\\":\\\"衡山县开云镇卫生院\\\",\\\"AnotherName\\\":\\\"\\\",\\\"IsValid\\\":false,\\\"CreateTime\\\":\\\"2016-10-20 10:45:48\\\",\\\"IsSampleDep\\\":true},{\\\"Row\\\":3,\\\"DepartId\\\":\\\"104002\\\",\\\"DepartName\\\":\\\"衡山县新桥镇中心卫生院\\\",\\\"AnotherName\\\":\\\"\\\",\\\"IsValid\\\":false,\\\"CreateTime\\\":\\\"2016-10-20 10:36:28\\\",\\\"IsSampleDep\\\":true},{\\\"Row\\\":4,\\\"DepartId\\\":\\\"104005\\\",\\\"DepartName\\\":\\\"衡山县渲洲镇中心卫生院\\\",\\\"AnotherName\\\":\\\"\\\",\\\"IsValid\\\":false,\\\"CreateTime\\\":\\\"2016-10-20 10:48:48\\\",\\\"IsSampleDep\\\":true},{\\\"Row\\\":5,\\\"DepartId\\\":\\\"104001\\\",\\\"DepartName\\\":\\\"心电图室\\\",\\\"AnotherName\\\":\\\"\\\",\\\"IsValid\\\":true,\\\"CreateTime\\\":\\\"2016-10-20 10:04:17\\\",\\\"IsSampleDep\\\":true}]\"}"
+}
