@@ -1,33 +1,34 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import MedicalOrgManage from 'components/MedicalOrgManage/Index'
-import DepartmentManage from 'components/DepartmentManage/Index'
-import RolesManage from 'components/RolesManage/Index'
-import UserManage from 'components/UserManage/Index'
+import MedicalOrg from 'components/MedicalOrg/Index'
+import Department from 'components/Department/Index'
+import Roles from 'components/Roles/Index'
+import User from 'components/User/Index'
 
 Vue.use(Router)
 
 export default new Router({
+  linkActiveClass: 'active',
   routes: [
     {
       path: '/',
-      name: 'MedicalOrgManage',
-      component: MedicalOrgManage
+      name: 'MedicalOrg',
+      component: MedicalOrg
     },
     {
-      path: '/DepartmentManage',
-      name: 'DepartmentManage',
-      component: DepartmentManage
+      path: '/Department',
+      name: 'Department',
+      component: Department
     },
     {
-      path: '/RolesManage',
-      name: 'RolesManage',
-      component: RolesManage
+      path: '/Roles',
+      name: 'Roles',
+      component: Roles
     },
     {
-      path: '/UserManage',
-      name: 'UserManage',
-      component: UserManage
+      path: '/User',
+      name: 'User',
+      component: User
     }
   ]
 })
