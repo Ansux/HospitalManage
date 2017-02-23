@@ -2,17 +2,13 @@
   <nav aria-label="Page navigation">
     <ul class="pagination">
       <li>
-        <a href="#" aria-label="Previous">
+        <a @click="page.current !==1 && changePage(1)" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
-      <li><a href="#">1</a></li>
-      <li><a href="#">2</a></li>
-      <li><a href="#">3</a></li>
-      <li><a href="#">4</a></li>
-      <li><a href="#">5</a></li>
+      <li v-for="pageIndex in pageCount" :key="pageIndex" :class="{'active': pageIndex===page.current}"><a @click="changePage(pageIndex)">{{pageIndex}}</a></li>
       <li>
-        <a href="#" aria-label="Next">
+        <a @click="page.current !==pageCount && changePage(pageCount)" aria-label="Next">
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>
@@ -27,8 +23,16 @@
         type: Object
       }
     },
-    created() {
-      console.log(this.page)
+    computed: {
+      pageCount() {
+        return Math.ceil(this.page.count / this.page.size)
+      }
+    },
+    methods: {
+      changePage(index) {
+        this.page.current = index
+        this.page.load()
+      }
     }
   }
 

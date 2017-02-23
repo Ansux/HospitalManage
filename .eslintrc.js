@@ -8,6 +8,7 @@ module.exports = {
   },
   env: {
     browser: true,
+    node: true
   },
   // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
   extends: 'standard',
@@ -15,6 +16,9 @@ module.exports = {
   plugins: [
     'html'
   ],
+  globals: {
+    $: true
+  },
   // add your custom rules here
   'rules': {
     "space-before-function-paren": ["error", "never"],

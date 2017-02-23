@@ -22,6 +22,7 @@
   body {
     background-color: #EDEDED;
     padding-top: 60px;
+    font-family: 'Arial','Microsoft YaHei';
   }
   .app {
     position: relative;
