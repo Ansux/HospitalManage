@@ -3,28 +3,30 @@
     <div class="nav-search">
       <input type="text" class="form-control" placeholder="输入关键字检索" v-model="searchQuery">
     </div>
-    <ul class="nav-menu">
-      <li v-for="item in MedicalOrgFilter" :class="{'active':currentMedicalOrg==item.MedicalOrgId}"><a @click="select(item.MedicalOrgId)">{{item.MedicalOrgName}}</a></li>
-    </ul>
+    <div class="nav-menu-wraper">
+      <ul class="nav-menu">
+        <li v-for="item in MedicalOrgFilter" :class="{'active':currentMedicalOrg==item.MedicalOrgId}"><a @click="select(item.MedicalOrgId)">{{item.MedicalOrgName}}</a></li>
+      </ul>
+    </div>
     <!--<pager :page="page"></pager>-->
   </nav>
 </template>
 
 <script>
-  import MedicalOrg from 'assets/data/MedicalOrg.json'
   import Pager from 'components/public/pager'
+  import {
+    getMedicalOrgList
+  } from 'src/api'
   export default {
     components: {
       Pager
     },
     data() {
       return {
-        MedicalOrgList: (() => {
-          return JSON.parse(JSON.parse(MedicalOrg.Data).ResultList)
-        })(),
+        MedicalOrgList: [],
         page: {
           current: 1,
-          size: 5,
+          size: 20,
           count: 10,
           load() {
             console.log(this.current)
@@ -48,15 +50,23 @@
       }
     },
     created() {
-      this.currentMedicalOrg = this.MedicalOrgList[0].MedicalOrgId
+      let _this = this
+      getMedicalOrgList({
+        pageIndex: 1,
+        pageSize: _this.page.size
+      }).then((res) => {
+        _this.MedicalOrgList = JSON.parse(JSON.parse(res.data.Data).ResultList)
+        _this.currentMedicalOrg = _this.MedicalOrgList[0].MedicalOrgId
+        this.$emit('changeMedicalOrgId', _this.currentMedicalOrg)
+      })
     },
     methods: {
       select(MedicalOrgId) {
         this.currentMedicalOrg = MedicalOrgId
+        this.$emit('changeMedicalOrgId', MedicalOrgId)
       }
     }
   }
-
 </script>
 
 <style lang="scss">
@@ -74,30 +84,35 @@
       width: 250px;
       padding: 15px 10px;
     }
-    .nav-menu {
-      margin-top: 64px;
-      padding-left: 0;
-      border-top: solid 1px #bbb;
-      li {
-        border-bottom: solid 1px #bbb;
-        a {
-          position: relative;
-          display: block;
-          padding: 12px 10px;
-          font-size: 16px;
-          color: #666;
-          text-decoration: none;
-          cursor: pointer;
-          span {
-            padding: 8px;
-            width: 30px;
-            text-align: center;
-          }
-        }
-        &.active {
-          background: #EDEDED;
+    .nav-menu-wraper {
+      padding-top: 60px;
+      height: 100%;
+      .nav-menu {
+        height: 100%;
+        padding-left: 0;
+        border-top: solid 1px #bbb;
+        overflow-y: scroll;
+        li {
+          border-bottom: solid 1px #bbb;
           a {
-            color: #333;
+            position: relative;
+            display: block;
+            padding: 12px 10px;
+            font-size: 16px;
+            color: #666;
+            text-decoration: none;
+            cursor: pointer;
+            span {
+              padding: 8px;
+              width: 30px;
+              text-align: center;
+            }
+          }
+          &.active {
+            background: #EDEDED;
+            a {
+              color: #333;
+            }
           }
         }
       }

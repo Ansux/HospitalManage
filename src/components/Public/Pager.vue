@@ -6,9 +6,9 @@
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
-      <li v-for="pageIndex in pageCount" :key="pageIndex" :class="{'active': pageIndex===page.current}"><a @click="changePage(pageIndex)">{{pageIndex}}</a></li>
+      <li v-for="pageIndex in page.totalPage" :key="pageIndex" :class="{'active': pageIndex===page.current}"><a @click="changePage(pageIndex)">{{pageIndex}}</a></li>
       <li>
-        <a @click="page.current !==pageCount && changePage(pageCount)" aria-label="Next">
+        <a @click="page.current !==page.totalPage && changePage(page.totalPage)" aria-label="Next">
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>
@@ -23,15 +23,10 @@
         type: Object
       }
     },
-    computed: {
-      pageCount() {
-        return Math.ceil(this.page.count / this.page.size)
-      }
-    },
     methods: {
       changePage(index) {
         this.page.current = index
-        this.page.load()
+        this.$emit('fetch')
       }
     }
   }

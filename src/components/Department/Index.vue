@@ -1,5 +1,5 @@
 <template>
-  <div class="category medical-wraper">
+  <div class="category department-wraper">
     <ol class="breadcrumb">
       <li><a href="#">首页</a></li>
       <li class="active">科室</li>
@@ -10,7 +10,6 @@
         <thead>
           <tr>
             <th width="10%">序号</th>
-            <th width="10%">科室代码</th>
             <th>科室名称</th>
             <th>英文名称</th>
             <th width="12%">添加时间</th>
@@ -20,12 +19,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in DepartmentPageList">
+          <tr v-for="(item, index) in departmentList">
             <td>{{item.Row}}</td>
-            <td>{{item.DepartId}}</td>
             <td>{{item.DepartName}}</td>
             <td>{{item.AnotherName}}</td>
-            <td>{{item.CreateTime.substr(0, 10)}}</td>
+            <td>{{item.CreateTime?item.CreateTime.substr(0,10):null}}</td>
             <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsValid, 'glyphicon-remove': !item.IsValid}"></span></td>
             <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsSampleDep, 'glyphicon-remove': !item.IsSampleDep}"></span></td>
             <td>
@@ -34,7 +32,7 @@
           </tr>
         </tbody>
       </table>
-      <pager :page="page"></pager>
+      <pager :page="page" @fetch="fetch"></pager>
       <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -95,24 +93,26 @@
 </template>
 
 <script>
-  import Department from 'assets/data/Department.json'
+  import {
+    getDeptByPage
+  } from 'src/api'
   import Pager from 'components/public/pager'
   export default {
+    props: {
+      moid: {
+        type: String
+      }
+    },
     components: {
       Pager
     },
     data() {
       return {
-        DepartmentList: (() => {
-          return JSON.parse(JSON.parse(Department.Data).ResultList)
-        })(),
+        departmentList: [],
         page: {
           current: 1,
           size: 5,
-          count: 0,
-          load() {
-            console.log(this.current)
-          }
+          totalPage: 1
         },
         modal: {
           title: '',
@@ -120,15 +120,13 @@
         }
       }
     },
+    watch: {
+      moid: 'fetch'
+    },
     created() {
-      this.page.count = this.DepartmentList.length
+      this.fetch()
     },
     computed: {
-      DepartmentPageList() {
-        let start = (this.page.current - 1) * this.page.size
-        let end = start + this.page.size
-        return this.DepartmentList.slice(start, end)
-      },
       validator() {
         let form = this.modal.form
         if (form === {}) return true
@@ -139,6 +137,15 @@
       }
     },
     methods: {
+      fetch() {
+        if (this.moid.length === 0) return
+        let _this = this
+        getDeptByPage({medicalOrgId: this.moid, pageIndex: this.page.current, pageSize: _this.page.size, str_search: ''}).then((res) => {
+          let data = JSON.parse(res.data.Data)
+          _this.page.totalPage = data.TotalPage
+          _this.departmentList = JSON.parse(data.ResultList)
+        })
+      },
       add() {
         this.modal.title = '添加科室'
         this.modal.form = {}
@@ -159,7 +166,7 @@
         let form = this.modal.form
         let DepartId = form.DepartId
         if (DepartId) {
-          this.DepartmentList.forEach(function(v, k) {
+          this.departmentList.forEach(function(v, k) {
             if (v.DepartId === DepartId) {
               v.DepartName = form.DepartName
               v.AnotherName = form.AnotherName
@@ -179,7 +186,7 @@
             IsSampleDep: form.IsSampleDep,
             CreateTime: `${date.getFullYear()}-${1 + date.getMonth()}-${date.getDate()}`
           })
-          this.page.count ++
+          this.page.count++
         }
         $('#myModal').modal('hide')
       }

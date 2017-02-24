@@ -4,6 +4,7 @@ import MedicalOrg from 'components/MedicalOrg/Index'
 import Department from 'components/Department/Index'
 import Roles from 'components/Roles/Index'
 import User from 'components/User/Index'
+import Device from 'components/Device/Index'
 
 Vue.use(Router)
 
@@ -29,6 +30,11 @@ export default new Router({
       path: '/User',
       name: 'User',
       component: User
+    },
+    {
+      path: '/Device',
+      name: 'Device',
+      component: Device
     }
   ]
 })

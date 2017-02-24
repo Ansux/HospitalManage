@@ -1,8 +1,8 @@
 <template>
   <div id="app" class="app">
     <navbar></navbar>
-    <side></side>
-    <div class="view-wraper"><router-view></router-view></div>
+    <side @changeMedicalOrgId="changeMedicalOrgId"></side>
+    <div class="view-wraper"><router-view :moid="moid"></router-view></div>
   </div>
 </template>
 
@@ -10,9 +10,19 @@
   import Navbar from 'components/public/navbar'
   import Side from 'components/public/side'
   export default {
+    data() {
+      return {
+        moid: ''
+      }
+    },
     components: {
       Navbar,
       Side
+    },
+    methods: {
+      changeMedicalOrgId(medicalOrgId) {
+        this.moid = medicalOrgId
+      }
     }
   }
 
