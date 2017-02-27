@@ -7,7 +7,7 @@
     </ol>
     <div class="content-warper">
       <Loading :isFetching="isFetching"></Loading>
-      <table class="table table-bordered table-striped" v-show="!isFetching">
+      <table class="table table-bordered table-striped">
         <thead>
           <tr>
             <th width="10%">序号</th>
@@ -118,6 +118,7 @@
         },
         modal: {
           title: '',
+          type: '',
           form: {}
         }
       }
@@ -131,11 +132,7 @@
     computed: {
       validator() {
         let form = this.modal.form
-        if (form === {}) return true
-        for (let filed in this.modal.form) {
-          if (!filed || filed === '') return true
-        }
-        return false
+        return (!form.DepartName || form.DepartName === '')
       }
     },
     methods: {
@@ -156,11 +153,13 @@
       },
       add() {
         this.modal.title = '添加科室'
+        this.modal.type = 'add'
         this.modal.form = {}
         $('#myModal').modal()
       },
       update(item) {
         this.modal.title = `【更新科室】${item.DepartName}`
+        this.modal.type = 'update'
         this.modal.form = {
           DepartId: item.DepartId,
           DepartName: item.DepartName,
@@ -172,29 +171,22 @@
       },
       save() {
         let form = this.modal.form
-        let DepartId = form.DepartId
-        if (DepartId) {
-          this.departmentList.forEach(function (v, k) {
-            if (v.DepartId === DepartId) {
-              v.DepartName = form.DepartName
-              v.AnotherName = form.AnotherName
-              v.IsValid = form.IsValid
-              v.IsSampleDep = form.IsSampleDep
-              return
-            }
+        if (this.modal.type === 'update') {
+          api('modifyExamDep', form).then(res => {
+            this.departmentList.forEach(function (v, k) {
+              if (v.DepartId === form.DepartId) {
+                v.DepartName = form.DepartName
+                v.AnotherName = form.AnotherName
+                v.IsValid = form.IsValid
+                v.IsSampleDep = form.IsSampleDep
+                return
+              }
+            })
           })
-        } else {
-          let date = new Date()
-          this.DepartmentList.push({
-            Row: 5,
-            DepartId: '123',
-            DepartName: form.DepartName,
-            AnotherName: form.AnotherName,
-            IsValid: form.IsValid,
-            IsSampleDep: form.IsSampleDep,
-            CreateTime: `${date.getFullYear()}-${1 + date.getMonth()}-${date.getDate()}`
+        } else if (this.modal.type === 'add') {
+          api('addExamDep', form).then(res => {
+            this.fetch()
           })
-          this.page.count++
         }
         $('#myModal').modal('hide')
       }

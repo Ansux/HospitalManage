@@ -6,8 +6,9 @@
     </ol>
     <div class="content-warper">
       <div class="panel panel-default">
+        <div class="panel-heading">更新资料</div>
         <div class="panel-body">
-          <form action="" class="form-horizontal">
+          <form class="form-horizontal">
             <div class="form-group">
               <label class="col-sm-3 control-label">医院编码</label>
               <div class="col-sm-9">
@@ -39,10 +40,11 @@
             </div>
             <div class="form-group">
               <div class="col-sm-offset-3 col-sm-9">
-                <button class="btn btn-success">保存</button>
+                <button type="button" class="btn btn-success" :disabled="validator" @click="save">保存</button>
               </div>
             </div>
           </form>
+          <Alert :alert="alert"></Alert>
         </div>
       </div>
     </div>
@@ -50,8 +52,8 @@
 </template>
 
 <script>
-  import Pager from 'components/common/pager'
   import api from 'src/api'
+  import Alert from 'components/common/Alert'
   export default {
     props: {
       moid: {
@@ -59,23 +61,25 @@
       }
     },
     components: {
-      Pager
+      Alert
     },
     data() {
       return {
         medicalOrg: {},
-        page: {
-          current: 1,
-          size: 5,
-          count: 20,
-          load() {
-            console.log(this.current)
-          }
-        }
+        alert: {}
       }
     },
     created() {
       this.fetch()
+    },
+    computed: {
+      validator() {
+        let flag = false
+        Object.keys(this.medicalOrg).forEach((v, k) => {
+          if (this.medicalOrg[v] === null || this.medicalOrg[v] === '') flag = true
+        })
+        return flag
+      }
     },
     methods: {
       fetch() {
@@ -83,7 +87,27 @@
           HosID: this.moid
         }).then(res => {
           res = JSON.parse(res.data.Data)
-          if (res.length > 0) this.medicalOrg = res[0]
+          if (res.length > 0) {
+            res = res[0]
+            this.medicalOrg = {
+              ESBPath: res.ESBPath,
+              IsValid: res.IsValid,
+              MedicalOrgName: res.MedicalOrgName,
+              MedicalOrgId: res.MedicalOrgId
+            }
+          }
+        })
+      },
+      save() {
+        api('modifyMedicalOrg', this.medicalOrg).then(res => {
+          if (res.data.Status) {
+            $('.nav-menu').find(`a[data-id=${this.medicalOrg.MedicalOrgId}]`).text(this.medicalOrg.MedicalOrgName)
+            this.alert = {
+              show: true,
+              text: '更新资料成功！',
+              timer: 2000
+            }
+          }
         })
       }
     },

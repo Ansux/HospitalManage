@@ -6,7 +6,7 @@
     <div class="nav-menu-wraper">
       <loading :isFetching="isFetching"></loading>
       <ul class="nav-menu" v-show="!isFetching">
-        <li v-for="item in MedicalOrgFilter" :class="{'active':currentMedicalOrg==item.MedicalOrgId}"><a @click="select(item.MedicalOrgId)">{{item.MedicalOrgName}}</a></li>
+        <li v-for="item in MedicalOrgFilter" :class="{'active':currentMedicalOrg==item.MedicalOrgId}"><a :data-id="item.MedicalOrgId" @click="select(item.MedicalOrgId)">{{item.MedicalOrgName}}</a></li>
       </ul>
     </div>
     <!--<pager :page="page"></pager>-->

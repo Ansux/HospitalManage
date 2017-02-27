@@ -179,7 +179,7 @@
           SystemSettingType: 'SystemIP'
         }).then(res => {
           res = JSON.parse(res.data.Data)
-          if (res.SystemIP) {
+          if (res && res.SystemIP) {
             this.settingInfo = res.SystemIP
           } else {
             this.settingInfo = {}

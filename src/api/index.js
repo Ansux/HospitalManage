@@ -9,7 +9,10 @@ function qsParams(params) {
 const routes = {
   getHosByPage: 'MedicalOrg.GetHosByPage',
   getMedicalOrgByOrgID: 'MedicalOrg.GetMedicalOrgByOrgID',
+  modifyMedicalOrg: 'MedicalOrg.ModifyMedicalOrg',
   getDeptByPage: 'Department.GetDeptByPage',
+  addExamDep: 'Department.AddExamDep',
+  modifyExamDep: 'Department.ModifyExamDep',
   getUsersByPage: 'BackUser.GetUsersByPage',
   getRoleByMidPage: 'Roles.GetRoleByMidPage',
   getClientByPage: 'Client.GetClientByPage',
