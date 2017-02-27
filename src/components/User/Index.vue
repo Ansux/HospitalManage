@@ -18,7 +18,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in userPageList">
+          <tr v-for="(item, index) in userList">
             <td>{{item.Row}}</td>
             <td>{{item.UserName}}</td>
             <td>{{item.RealName}}</td>
@@ -30,7 +30,7 @@
           </tr>
         </tbody>
       </table>
-      <pager :page="page"></pager>
+      <pager :page="page" @fetch="fetch"></pager>
       <div class="modal fade modal-user" id="modal_user" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -77,7 +77,7 @@
                 <div class="form-group">
                   <label for="" class="col-sm-3 control-label">职位名称</label>
                   <div class="col-sm-9">
-                      <input type="text" class="form-control" v-model="modal.form.other">
+                    <input type="text" class="form-control" v-model="modal.form.other">
                   </div>
                 </div>
                 <div class="form-group">
@@ -131,19 +131,22 @@
 </template>
 
 <script>
-  import User from 'assets/data/User.json'
   import Role from 'assets/data/Role.json'
   import UserDepartment from 'assets/data/UserDepartment.json'
-  import Pager from 'components/public/pager'
+  import Pager from 'components/common/pager'
+  import api from 'src/api'
   export default {
+    props: {
+      moid: {
+        type: String
+      }
+    },
     components: {
       Pager
     },
     data() {
       return {
-        UserList: (() => {
-          return JSON.parse(JSON.parse(User.Data).ResultList)
-        })(),
+        userList: [],
         RoleList: (() => {
           return JSON.parse(JSON.parse(Role.Data).RoleJSON)
         })(),
@@ -153,7 +156,7 @@
         page: {
           current: 1,
           size: 5,
-          count: 20,
+          totalPage: 1,
           load() {
             console.log(this.current)
           }
@@ -164,12 +167,10 @@
         }
       }
     },
+    created() {
+      this.fetch()
+    },
     computed: {
-      userPageList() {
-        let start = (this.page.current - 1) * this.page.size
-        let end = start + this.page.size
-        return this.UserList.slice(start, end)
-      },
       validator() {
         let form = this.modal.form
         if (form === {}) return true
@@ -180,6 +181,19 @@
       }
     },
     methods: {
+      fetch() {
+        if (this.moid.length === 0) return
+        api('getUsersByPage', {
+          medicalOrgId: this.moid,
+          pageIndex: this.page.current,
+          pageSize: this.page.size,
+          str_search: ''
+        }).then(res => {
+          res = JSON.parse(res.data.Data)
+          this.page.totalPage = res.TotalPage
+          this.userList = JSON.parse(res.ResultList)
+        })
+      },
       add() {
         this.modal.title = '添加用户'
         this.modal.form = {}
@@ -193,6 +207,9 @@
       save() {
         console.log()
       }
+    },
+    watch: {
+      moid: 'fetch'
     }
   }
 

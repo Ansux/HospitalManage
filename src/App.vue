@@ -7,8 +7,8 @@
 </template>
 
 <script>
-  import Navbar from 'components/public/navbar'
-  import Side from 'components/public/side'
+  import Navbar from 'components/common/navbar'
+  import Side from 'components/common/side'
   export default {
     data() {
       return {

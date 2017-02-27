@@ -6,7 +6,8 @@
       <li class="action"><button @click="add" class="btn btn-xs btn-default">添加科室</button></li>
     </ol>
     <div class="content-warper">
-      <table class="table table-bordered table-striped">
+      <Loading :isFetching="isFetching"></Loading>
+      <table class="table table-bordered table-striped" v-show="!isFetching">
         <thead>
           <tr>
             <th width="10%">序号</th>
@@ -93,10 +94,9 @@
 </template>
 
 <script>
-  import {
-    getDeptByPage
-  } from 'src/api'
-  import Pager from 'components/public/pager'
+  import api from 'src/api'
+  import Pager from 'components/common/pager'
+  import Loading from 'components/common/loading'
   export default {
     props: {
       moid: {
@@ -104,10 +104,12 @@
       }
     },
     components: {
-      Pager
+      Pager,
+      Loading
     },
     data() {
       return {
+        isFetching: false,
         departmentList: [],
         page: {
           current: 1,
@@ -139,11 +141,17 @@
     methods: {
       fetch() {
         if (this.moid.length === 0) return
-        let _this = this
-        getDeptByPage({medicalOrgId: this.moid, pageIndex: this.page.current, pageSize: _this.page.size, str_search: ''}).then((res) => {
+        this.isFetching = true
+        api('getDeptByPage', {
+          medicalOrgId: this.moid,
+          pageIndex: this.page.current,
+          pageSize: this.page.size,
+          str_search: ''
+        }).then((res) => {
           let data = JSON.parse(res.data.Data)
-          _this.page.totalPage = data.TotalPage
-          _this.departmentList = JSON.parse(data.ResultList)
+          this.page.totalPage = data.TotalPage
+          this.departmentList = JSON.parse(data.ResultList)
+          this.isFetching = false
         })
       },
       add() {
@@ -166,7 +174,7 @@
         let form = this.modal.form
         let DepartId = form.DepartId
         if (DepartId) {
-          this.departmentList.forEach(function(v, k) {
+          this.departmentList.forEach(function (v, k) {
             if (v.DepartId === DepartId) {
               v.DepartName = form.DepartName
               v.AnotherName = form.AnotherName

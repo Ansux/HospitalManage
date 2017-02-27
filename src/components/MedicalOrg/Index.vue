@@ -2,54 +2,68 @@
   <div class="category medical-wraper">
     <ol class="breadcrumb">
       <li><a href="#">首页</a></li>
-      <li><a href="#">医院管理</a></li>
-      <li class="active">医院列表</li>
+      <li class="active">医院资料</li>
     </ol>
     <div class="content-warper">
-      <div class="header">
-
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <form action="" class="form-horizontal">
+            <div class="form-group">
+              <label class="col-sm-3 control-label">医院编码</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" v-model="medicalOrg.MedicalOrgId" readonly>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">医院名称</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" v-model="medicalOrg.MedicalOrgName">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">ESB地址</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" v-model="medicalOrg.ESBPath">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">是否启用</label>
+              <div class="col-sm-9">
+                <label class="radio-inline">
+                  <input type="radio" value="true" v-model="medicalOrg.IsValid"> 是
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" value="false" v-model="medicalOrg.IsValid"> 否
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-sm-9">
+                <button class="btn btn-success">保存</button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-      <table class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th width="10%">序号</th>
-            <th>医院名称</th>
-            <th width="30%">ESB地址</th>
-            <th width="10%">是否可用</th>
-            <th width="15%">权限</th>
-            <th width="10%">操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in MedicalOrgPageList">
-            <td>{{item.Row}}</td>
-            <td>{{item.MedicalOrgName}}</td>
-            <td>{{item.ESBPath}}</td>
-            <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsValid, 'glyphicon-remove': !item.IsValid,}"></span></td>
-            <td><button href="" class="btn btn-xs btn-default">权限管理</button></td>
-            <td>
-              <button href="" class="btn btn-xs btn-warning">更新</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <pager :page="page"></pager>
     </div>
   </div>
 </template>
 
 <script>
-  import MedicalOrg from 'assets/data/MedicalOrg.json'
-  import Pager from 'components/public/pager'
+  import Pager from 'components/common/pager'
+  import api from 'src/api'
   export default {
+    props: {
+      moid: {
+        type: String
+      }
+    },
     components: {
       Pager
     },
     data() {
       return {
-        MedicalOrgList: (() => {
-          return JSON.parse(JSON.parse(MedicalOrg.Data).ResultList)
-        })(),
+        medicalOrg: {},
         page: {
           current: 1,
           size: 5,
@@ -60,12 +74,21 @@
         }
       }
     },
-    computed: {
-      MedicalOrgPageList() {
-        let start = (this.page.current - 1) * this.page.size
-        let end = start + this.page.size
-        return this.MedicalOrgList.slice(start, end)
+    created() {
+      this.fetch()
+    },
+    methods: {
+      fetch() {
+        api('getMedicalOrgByOrgID', {
+          HosID: this.moid
+        }).then(res => {
+          res = JSON.parse(res.data.Data)
+          if (res.length > 0) this.medicalOrg = res[0]
+        })
       }
+    },
+    watch: {
+      moid: 'fetch'
     }
   }
 
@@ -80,6 +103,7 @@
       background: #fff;
     }
     .content-warper {
+      position: relative;
       padding: 20px;
       background-color: #fff;
     }

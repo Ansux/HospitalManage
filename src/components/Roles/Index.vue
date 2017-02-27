@@ -16,7 +16,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in RolePageList">
+          <tr v-for="(item, index) in roleList">
             <td>{{item.Row}}</td>
             <td>{{item.RoleName}}</td>
             <td>{{item.MedicalOrgName}}</td>
@@ -27,7 +27,7 @@
           </tr>
         </tbody>
       </table>
-      <pager :page="page"></pager>
+      <pager :page="page" @fetch="fetch"></pager>
       <div class="modal fade modal-roles" id="modal_roles" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -86,14 +86,16 @@
 <script>
   import Role from 'assets/data/Role.json'
   import Rights from 'assets/data/Rights.json'
-  import Pager from 'components/public/pager'
+  import Pager from 'components/common/pager'
+  import api from 'src/api'
   export default {
+    props: ['moid'],
     components: {
       Pager
     },
     data() {
       return {
-        RoleList: (() => {
+        roleList: (() => {
           return JSON.parse(JSON.parse(Role.Data).RoleJSON)
         })(),
         RightsList: (() => {
@@ -102,10 +104,7 @@
         page: {
           current: 1,
           size: 5,
-          count: 20,
-          load() {
-            console.log(this.current)
-          }
+          totalPage: 1
         },
         modal: {
           title: '',
@@ -113,12 +112,10 @@
         }
       }
     },
+    created() {
+      this.fetch()
+    },
     computed: {
-      RolePageList() {
-        let start = (this.page.current - 1) * this.page.size
-        let end = start + this.page.size
-        return this.RoleList.slice(start, end)
-      },
       validator() {
         let form = this.modal.form
         if (form === {}) return true
@@ -129,6 +126,17 @@
       }
     },
     methods: {
+      fetch() {
+        api('getRoleByMidPage', {
+          medicalOrgId: this.moid,
+          userPageIndex: this.page.current,
+          userPageSize: this.page.size
+        }).then(res => {
+          res = JSON.parse(res.data.Data)
+          this.totalPage = res.CountPage
+          this.roleList = JSON.parse(res.RoleJSON)
+        })
+      },
       update(item) {
         this.modal.title = `【更新角色】${item.RoleName}`
         this.modal.form = item
@@ -137,6 +145,9 @@
       save() {
         console.log()
       }
+    },
+    watch: {
+      'moid': 'fetch'
     }
   }
 

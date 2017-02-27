@@ -6,16 +6,21 @@ function qsParams(params) {
   return Qs.stringify(params)
 }
 
-export const getMedicalOrgList = (params) => {
-  return axios.post(URL, qsParams({
-    module: 'MedicalOrg.GetHosByPage',
-    data: JSON.stringify(params)
-  }))
+const routes = {
+  getHosByPage: 'MedicalOrg.GetHosByPage',
+  getMedicalOrgByOrgID: 'MedicalOrg.GetMedicalOrgByOrgID',
+  getDeptByPage: 'Department.GetDeptByPage',
+  getUsersByPage: 'BackUser.GetUsersByPage',
+  getRoleByMidPage: 'Roles.GetRoleByMidPage',
+  getClientByPage: 'Client.GetClientByPage',
+  getVersionByPage: 'Client.GetVersionByPage',
+  getMedicalOrgSetting: 'MedicalOrg.GetMedicalOrgSetting',
+  getServiceType: 'Charge.GetServiceType'
 }
 
-export const getDeptByPage = (params) => {
+export default (routeKey, params) => {
   return axios.post(URL, qsParams({
-    module: 'Department.GetDeptByPage',
+    module: routes[routeKey],
     data: JSON.stringify(params)
   }))
 }

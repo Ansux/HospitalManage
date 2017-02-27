@@ -113,7 +113,7 @@
 <script>
   import Device from 'assets/data/Device.json'
   import UserDepartment from 'assets/data/UserDepartment.json'
-  import Pager from 'components/public/pager'
+  import Pager from 'components/common/pager'
   export default {
     props: {
       moid: {

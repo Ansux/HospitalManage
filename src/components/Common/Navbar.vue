@@ -23,10 +23,10 @@
           <router-link tag="li" to="/Device"><a>设备</a></router-link>
           <router-link tag="li" to="/JH"><a>叫号</a></router-link>
           <router-link tag="li" to="/TC"><a>套餐</a></router-link>
-          <router-link tag="li" to="/KHD"><a>客户端监控</a></router-link>
-          <router-link tag="li" to="/SJ"><a>客户端升级</a></router-link>
-          <router-link tag="li" to="/SET"><a>系统设置</a></router-link>
-          <router-link tag="li" to="/YUN"><a>云配置</a></router-link>
+          <router-link tag="li" to="/Client"><a>客户端监控</a></router-link>
+          <router-link tag="li" to="/ClientUpdate"><a>客户端升级</a></router-link>
+          <router-link tag="li" to="/SystemSetting"><a>系统设置</a></router-link>
+          <router-link tag="li" to="/CloudSetting"><a>云配置</a></router-link>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <!--<li><a href="#">Link</a></li>-->

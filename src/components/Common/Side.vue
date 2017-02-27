@@ -4,7 +4,8 @@
       <input type="text" class="form-control" placeholder="输入关键字检索" v-model="searchQuery">
     </div>
     <div class="nav-menu-wraper">
-      <ul class="nav-menu">
+      <loading :isFetching="isFetching"></loading>
+      <ul class="nav-menu" v-show="!isFetching">
         <li v-for="item in MedicalOrgFilter" :class="{'active':currentMedicalOrg==item.MedicalOrgId}"><a @click="select(item.MedicalOrgId)">{{item.MedicalOrgName}}</a></li>
       </ul>
     </div>
@@ -13,16 +14,17 @@
 </template>
 
 <script>
-  import Pager from 'components/public/pager'
-  import {
-    getMedicalOrgList
-  } from 'src/api'
+  import Pager from 'components/common/pager'
+  import Loading from 'components/common/loading'
+  import api from 'src/api'
   export default {
     components: {
-      Pager
+      Pager,
+      Loading
     },
     data() {
       return {
+        isFetching: false,
         MedicalOrgList: [],
         page: {
           current: 1,
@@ -44,20 +46,21 @@
       },
       MedicalOrgFilter() {
         var self = this
-        return self.MedicalOrgPageList.filter(function(item) {
+        return self.MedicalOrgPageList.filter(function (item) {
           return item.MedicalOrgName.indexOf(self.searchQuery) !== -1
         })
       }
     },
     created() {
-      let _this = this
-      getMedicalOrgList({
+      this.isFetching = true
+      api('getHosByPage', {
         pageIndex: 1,
-        pageSize: _this.page.size
-      }).then((res) => {
-        _this.MedicalOrgList = JSON.parse(JSON.parse(res.data.Data).ResultList)
-        _this.currentMedicalOrg = _this.MedicalOrgList[0].MedicalOrgId
-        this.$emit('changeMedicalOrgId', _this.currentMedicalOrg)
+        pageSize: this.page.size
+      }).then(res => {
+        this.MedicalOrgList = JSON.parse(JSON.parse(res.data.Data).ResultList)
+        this.currentMedicalOrg = this.MedicalOrgList[0].MedicalOrgId
+        this.$emit('changeMedicalOrgId', this.currentMedicalOrg)
+        this.isFetching = false
       })
     },
     methods: {
@@ -67,6 +70,7 @@
       }
     }
   }
+
 </script>
 
 <style lang="scss">

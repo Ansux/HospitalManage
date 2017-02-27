@@ -5,6 +5,10 @@ import Department from 'components/Department/Index'
 import Roles from 'components/Roles/Index'
 import User from 'components/User/Index'
 import Device from 'components/Device/Index'
+import Client from 'components/Client/Index'
+import ClientUpdate from 'components/ClientUpdate/Index'
+import SystemSetting from 'components/SystemSetting/Index'
+import CloudSetting from 'components/CloudSetting/Index'
 
 Vue.use(Router)
 
@@ -35,6 +39,26 @@ export default new Router({
       path: '/Device',
       name: 'Device',
       component: Device
+    },
+    {
+      path: '/Client',
+      name: 'Client',
+      component: Client
+    },
+    {
+      path: '/ClientUpdate',
+      name: 'ClientUpdate',
+      component: ClientUpdate
+    },
+    {
+      path: '/SystemSetting',
+      name: 'SystemSetting',
+      component: SystemSetting
+    },
+    {
+      path: '/CloudSetting',
+      name: 'CloudSetting',
+      component: CloudSetting
     }
   ]
 })
