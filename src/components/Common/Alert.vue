@@ -1,6 +1,6 @@
 <template>
-  <div class="warp-confirm" v-show="alert.show">
-    <div class="confirm">
+  <div class="warp-alert" v-show="alert.show">
+    <div class="alert">
       <div class="title"><span class="text">提示：</span><span class="btn-close" @click="close()">&times;</span></div>
       <div class="content">{{alert.text}}</div>
       <div class="btns"><a class="cancel" @click="close()">关闭</a></div>
@@ -37,7 +37,7 @@
 </script>
 
 <style lang="scss">
-  .warp-confirm {
+  .warp-alert {
     position: fixed;
     top: 0px;
     right: 0px;
@@ -45,7 +45,7 @@
     left: 0px;
     background-color: rgba(0, 0, 0, .1);
     z-index: 9999;
-    .confirm {
+    .alert {
       position: fixed;
       top: 50%;
       left: 50%;

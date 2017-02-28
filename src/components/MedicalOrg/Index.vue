@@ -44,16 +44,16 @@
               </div>
             </div>
           </form>
-          <Alert :alert="alert"></Alert>
         </div>
       </div>
+      <Alert :alert="alert"></Alert>
     </div>
   </div>
 </template>
 
 <script>
   import api from 'src/api'
-  import Alert from 'components/common/Alert'
+  import Alert from 'components/common/alert'
   export default {
     props: {
       moid: {
