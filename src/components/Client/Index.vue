@@ -96,14 +96,20 @@
           this.clientList = JSON.parse(res.ResultList)
         })
       },
-      add(item) {
+      update(item) {
         let text = item.IsValid ? '禁用' : '启用'
         this.cf = {
           show: true,
           text: `确定要${text}此条目么？`,
           ok() {
-            item.IsValid = !item.IsValid
-            this.show = false
+            api('disableClient', {
+              ClientTag: item.ClientTag,
+              IsValid: item.IsValid
+            }).then(res => {
+              this.show = false
+              if (!res.data.Status) return
+              item.IsValid = !item.IsValid
+            })
           }
         }
       }

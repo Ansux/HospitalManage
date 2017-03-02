@@ -5,7 +5,7 @@
       <li class="active">系统设置</li>
     </ol>
     <div class="content-warper">
-      <form action="" class="form-horizontal">
+      <form class="form-horizontal">
         <div class="panel panel-default">
           <div class="panel-heading">FTP地址</div>
           <div class="panel-body">
@@ -65,19 +65,19 @@
           <div class="panel-heading">权限设置</div>
           <div class="panel-body">
             <div class="row">
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <label class="checkbox-inline">
-                  <input type="checkbox" value="1" v-model="settingInfo.NurseDelete"> 护士可删除
+                  <input type="checkbox" v-model="settingInfo.NurseDelete"> 护士可删除
                 </label>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <label class="checkbox-inline">
-                  <input type="checkbox" value="1" v-model="settingInfo.SampleDelete"> 检查医生可删除
+                  <input type="checkbox" v-model="settingInfo.SampleDelete"> 检查医生可删除
                 </label>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <label class="checkbox-inline">
-                  <input type="checkbox" value="1" v-model="settingInfo.DiagnosisDelete"> 诊断医生可删除
+                  <input type="checkbox" v-model="settingInfo.DiagnosisDelete"> 诊断医生可删除
                 </label>
               </div>
             </div>
@@ -87,17 +87,16 @@
           <div class="panel-heading">文件输出</div>
           <div class="panel-body">
             <div class="row">
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <label class="checkbox-inline">
-                  <input type="checkbox" value="1" v-model="settingInfo.AutoFDA"> FDA-XML
+                  <input type="checkbox" v-model="settingInfo.AutoFDA"> FDA-XML
                 </label>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <label class="checkbox-inline">
-                  <input type="checkbox" value="1" v-model="settingInfo.AutoDCM"> DICOM
+                  <input type="checkbox" v-model="settingInfo.AutoDCM"> DICOM
                 </label>
               </div>
-              <div class="col-sm-4"></div>
             </div>
           </div>
         </div>
@@ -107,65 +106,74 @@
             <div class="row">
               <div class="col-sm-3">
                 <label class="checkbox-inline">
-                  <input type="checkbox" value="1" v-model="settingInfo.MatchFailAlone"> 匹配失败单独列出
+                  <input type="checkbox" v-model="settingInfo.MatchFailAlone"> 匹配失败单独列出
                 </label>
               </div>
               <div class="col-sm-3">
                 <label class="checkbox-inline">
-                  <input type="checkbox" value="1" v-model="settingInfo.ConsultationEnabled"> 会诊开启
+                  <input type="checkbox" v-model="settingInfo.ConsultationEnabled"> 会诊开启
                 </label>
               </div>
               <div class="col-sm-3">
                 <label class="checkbox-inline">
-                  <input type="checkbox" value="1" v-model="settingInfo.HolterEnabled"> Holter开启
+                  <input type="checkbox" v-model="settingInfo.HolterEnabled"> Holter开启
                 </label>
               </div>
               <div class="col-sm-3">
                 <label class="checkbox-inline">
-                  <input type="checkbox" value="1" v-model="settingInfo.MatchFailAlone"> 双签名
+                  <input type="checkbox" v-model="settingInfo.DoubleSignature"> 双签名
                 </label>
               </div>
             </div>
             <div class="row">
               <div class="col-sm-3">
                 <label class="checkbox-inline">
-                  <input type="checkbox" value="1" v-model="settingInfo.FCGEnabled"> 频谱开启
+                  <input type="checkbox" v-model="settingInfo.FCGEnabled"> 频谱开启
                 </label>
               </div>
               <div class="col-sm-3">
                 <label class="checkbox-inline">
-                  <input type="checkbox" value="1" v-model="settingInfo.HFEnabled"> 高频开启
+                  <input type="checkbox" v-model="settingInfo.HFEnabled"> 高频开启
                 </label>
               </div>
               <div class="col-sm-3">
                 <label class="checkbox-inline">
-                  <input type="checkbox" value="1" v-model="settingInfo.CVCGEnabled"> 推算心电向量开启
+                  <input type="checkbox" v-model="settingInfo.CVCGEnabled"> 推算心电向量开启
                 </label>
               </div>
               <div class="col-sm-3">
                 <label class="checkbox-inline">
-                  <input type="checkbox" value="1" v-model="settingInfo.QTDEnabled"> QT离散度开启
+                  <input type="checkbox" v-model="settingInfo.QTDEnabled"> QT离散度开启
                 </label>
               </div>
             </div>
           </div>
+          <div class="panel-footer">
+            <button type="button" class="btn btn-success" @click="save">保存修改</button>
+          </div>
         </div>
       </form>
+      <Alert :alert="alert"></Alert>
     </div>
   </div>
 </template>
 
 <script>
   import api from 'src/api'
+  import Alert from 'components/common/alert'
   export default {
     props: {
       moid: {
         type: String
       }
     },
+    components: {
+      Alert
+    },
     data() {
       return {
-        settingInfo: {}
+        settingInfo: {},
+        alert: {}
       }
     },
     created() {
@@ -180,9 +188,68 @@
         }).then(res => {
           res = JSON.parse(res.data.Data)
           if (res && res.SystemIP) {
-            this.settingInfo = res.SystemIP
+            res = res.SystemIP
+            res.AutoDCM = this.strToBool(res.AutoDCM)
+            res.AutoFDA = this.strToBool(res.AutoFDA)
+            res.CVCGEnabled = this.strToBool(res.CVCGEnabled)
+            res.ConsultationEnabled = this.strToBool(res.ConsultationEnabled)
+            res.DiagnosisDelete = this.strToBool(res.DiagnosisDelete)
+            res.FCGEnabled = this.strToBool(res.FCGEnabled)
+            res.HFEnabled = this.strToBool(res.HFEnabled)
+            res.HolterEnabled = this.strToBool(res.HolterEnabled)
+            res.MatchFailAlone = this.strToBool(res.MatchFailAlone)
+            res.NurseDelete = this.strToBool(res.NurseDelete)
+            res.QTDEnabled = this.strToBool(res.QTDEnabled)
+            res.SampleDelete = this.strToBool(res.SampleDelete)
+            res.DoubleSignature = this.strToBool(res.DoubleSignature)
+            this.settingInfo = res
           } else {
             this.settingInfo = {}
+          }
+        })
+      },
+      strToBool(val) {
+        return Boolean(val - 0)
+      },
+      boolToInt(val) {
+        return Number(val)
+      },
+      save() {
+        let setting = this.settingInfo
+        let form = {
+          HosID: this.moid,
+          SystemSettingType: 'SystemIP',
+          ServerIP: setting.ServerIP,
+          ServerCOM: setting.ServerCOM,
+          CometIP: setting.CometIP,
+          CometCOM: setting.CometCOM,
+          DBIP: setting.DBIP,
+          DBCOM: setting.DBCOM,
+          FileIP: setting.FileIP,
+          FileCOM: setting.FileCOM,
+          FTPAddress: setting.FTPAddress,
+          FTPUser: setting.FTPUser,
+          FTPPwd: setting.FTPPwd,
+          AutoDCM: this.boolToInt(setting.AutoDCM),
+          AutoFDA: this.boolToInt(setting.AutoFDA),
+          CVCGEnabled: this.boolToInt(setting.CVCGEnabled),
+          ConsultationEnabled: this.boolToInt(setting.ConsultationEnabled),
+          DiagnosisDelete: this.boolToInt(setting.DiagnosisDelete),
+          FCGEnabled: this.boolToInt(setting.FCGEnabled),
+          HFEnabled: this.boolToInt(setting.HFEnabled),
+          HolterEnabled: this.boolToInt(setting.HolterEnabled),
+          MatchFailAlone: this.boolToInt(setting.MatchFailAlone),
+          NurseDelete: this.boolToInt(setting.NurseDelete),
+          QTDEnabled: this.boolToInt(setting.QTDEnabled),
+          SampleDelete: this.boolToInt(setting.SampleDelete),
+          DoubleSignature: this.boolToInt(setting.DoubleSignature)
+        }
+        api('saveMedicalSetting', form).then(res => {
+          if (!res.data.Status) true
+          this.alert = {
+            show: true,
+            text: '系统设置修改成功！',
+            timer: 2000
           }
         })
       }

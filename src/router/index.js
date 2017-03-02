@@ -5,6 +5,8 @@ import Department from 'components/Department/Index'
 import Roles from 'components/Roles/Index'
 import User from 'components/User/Index'
 import Device from 'components/Device/Index'
+import CallNumber from 'components/CallNumber/Index'
+import Package from 'components/Package/Index'
 import Client from 'components/Client/Index'
 import ClientUpdate from 'components/ClientUpdate/Index'
 import SystemSetting from 'components/SystemSetting/Index'
@@ -39,6 +41,16 @@ export default new Router({
       path: '/Device',
       name: 'Device',
       component: Device
+    },
+    {
+      path: '/CallNumber',
+      name: 'CallNumber',
+      component: CallNumber
+    },
+    {
+      path: '/Package',
+      name: 'Package',
+      component: Package
     },
     {
       path: '/Client',

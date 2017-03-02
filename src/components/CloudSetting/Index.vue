@@ -5,17 +5,17 @@
       <li class="active">系统设置</li>
     </ol>
     <div class="content-warper">
-      <form action="" class="form-horizontal">
+      <form class="form-horizontal">
         <div class="panel panel-default">
           <div class="panel-heading">计费设置</div>
           <div class="panel-body">
             <div class="row">
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <label class="checkbox-inline">
                   <input type="checkbox" value="1" v-model="settingInfo.CostEnable"> 计费开启
                 </label>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-5">
                 <div class="form-group">
                   <label class="col-sm-4 control-label">计费服务地址</label>
                   <div class="col-sm-8">
@@ -40,37 +40,45 @@
           <div class="panel-heading">远程诊断中心设置(YTK)</div>
           <div class="panel-body">
             <div class="row">
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <label class="checkbox-inline">
                   <input type="checkbox" value="1" v-model="settingInfo.SendAfterSample_Enabled_YTK"> 采集完毕自动发送
                 </label>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <label class="checkbox-inline">
                   <input type="checkbox" value="1" v-model="settingInfo.SendConsultation_Enabled_YTK"> 会诊发送
                 </label>
               </div>
-              <div class="col-sm-4"></div>
             </div>
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-success" type="button" @click="save">保存修改</button>
           </div>
         </div>
       </form>
+      <Alert :alert="alert"></Alert>
     </div>
   </div>
 </template>
 
 <script>
   import api from 'src/api'
+  import Alert from 'components/common/alert'
   export default {
     props: {
       moid: {
         type: String
       }
     },
+    components: {
+      Alert
+    },
     data() {
       return {
         settingInfo: {},
-        serviceTypes: []
+        serviceTypes: [],
+        alert: {}
       }
     },
     created() {
@@ -79,20 +87,55 @@
     methods: {
       fetch() {
         if (this.moid.length === 0) return
-        api('getMedicalOrgSetting', {
-          HosID: this.moid,
-          SystemSettingType: 'CloudSetting'
-        }).then(res => {
-          res = JSON.parse(res.data.Data)
-          if (res && res.CloudSetting) {
-            this.settingInfo = res.CloudSetting
-          } else {
-            this.settingInfo = {}
-          }
-        })
         api('getServiceType', '').then(res => {
           res = JSON.parse(res.data.Data)
           this.serviceTypes = res
+
+          // 获取云配置
+          api('getMedicalOrgSetting', {
+            HosID: this.moid,
+            SystemSettingType: 'CloudSetting'
+          }).then(res => {
+            res = JSON.parse(res.data.Data)
+            if (res && res.CloudSetting) {
+              res = res.CloudSetting
+              this.settingInfo = {
+                SendAfterSample_Enabled_YTK: this.strToBool(res.SendAfterSample_Enabled_YTK),
+                SendConsultation_Enabled_YTK: this.strToBool(res.SendConsultation_Enabled_YTK),
+                CostEnable: this.strToBool(res.CostEnable),
+                CostServerAddress: res.CostServerAddress,
+                ServiceCode: res.ServiceCode
+              }
+            } else {
+              this.settingInfo = {}
+            }
+          })
+        })
+      },
+      strToBool(val) {
+        return Boolean(val - 0)
+      },
+      boolToInt(val) {
+        return Number(val)
+      },
+      save() {
+        let setting = this.settingInfo
+        let form = {
+          HosID: this.moid,
+          SystemSettingType: 'CloudSetting',
+          SendAfterSample_Enabled_YTK: this.boolToInt(setting.SendAfterSample_Enabled_YTK),
+          SendConsultation_Enabled_YTK: this.boolToInt(setting.SendConsultation_Enabled_YTK),
+          CostEnable: this.boolToInt(setting.CostEnable),
+          CostServerAddress: setting.CostServerAddress,
+          ServiceCode: setting.ServiceCode
+        }
+        api('saveMedicalSetting', form).then(res => {
+          if (!res.data.Status) true
+          this.alert = {
+            show: true,
+            text: '系统设置修改成功！',
+            timer: 2000
+          }
         })
       }
     },

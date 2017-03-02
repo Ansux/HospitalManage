@@ -44,6 +44,24 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
+                      <label for="" class="col-sm-3 control-label">用户工号</label>
+                      <div class="col-sm-9">
+                        <input type="text" class="form-control" v-model="form.UserId" :disabled="modal.type==='update'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="" class="col-sm-3 control-label">登录名称</label>
+                      <div class="col-sm-9">
+                        <input type="text" class="form-control" v-model="form.UserName">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
                       <label for="" class="col-sm-3 control-label">真实姓名</label>
                       <div class="col-sm-9">
                         <input type="text" class="form-control" v-model="form.RealName">
@@ -54,7 +72,7 @@
                     <div class="form-group">
                       <label for="" class="col-sm-3 control-label">所属科室</label>
                       <div class="col-sm-9">
-                        <select class="form-control" v-model="form.DepartId">
+                        <select class="form-control" v-model="form.Departmentid">
                           <option v-for="item in departmentList" :value="item.DepartId">{{item.DepartName}}</option>
                         </select>
                       </div>
@@ -67,7 +85,7 @@
                       <label for="" class="col-sm-3 control-label">所属角色</label>
                       <div class="col-sm-9">
                         <label class="checkbox-inline" v-for="item in roleList">
-                          <input type="checkbox" :checked="item.isChecked"> {{item.ROLENAME}}
+                          <input type="checkbox" :value="item.ROLEID" v-model="form.RoleId"> {{item.ROLENAME}}
                         </label>
                       </div>
                     </div>
@@ -78,7 +96,7 @@
                     <div class="form-group">
                       <label for="" class="col-sm-3 control-label">职位名称</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" v-model="form.other">
+                        <input type="text" class="form-control" v-model="form.Position">
                       </div>
                     </div>
                   </div>
@@ -86,7 +104,7 @@
                     <div class="form-group">
                       <label for="" class="col-sm-3 control-label">最高学历</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" v-model="form.other">
+                        <input type="text" class="form-control" v-model="form.Qualification">
                       </div>
                     </div>
                   </div>
@@ -96,7 +114,7 @@
                     <div class="form-group">
                       <label for="" class="col-sm-3 control-label">固定电话</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" v-model="form.other">
+                        <input type="text" class="form-control" v-model="form.Call">
                       </div>
                     </div>
                   </div>
@@ -104,7 +122,7 @@
                     <div class="form-group">
                       <label for="" class="col-sm-3 control-label">移动电话</label>
                       <div class="col-sm-9">
-                        <input type="text" class="form-control" v-model="form.other">
+                        <input type="text" class="form-control" v-model="form.HandPhone">
                       </div>
                     </div>
                   </div>
@@ -114,7 +132,7 @@
                     <div class="form-group">
                       <label for="" class="col-sm-3 control-label">常用邮箱</label>
                       <div class="col-sm-9">
-                        <input type="email" class="form-control" v-model="form.other">
+                        <input type="email" class="form-control" v-model="form.Email">
                       </div>
                     </div>
                   </div>
@@ -170,13 +188,15 @@
           totalPage: 1
         },
         modal: {
-          title: ''
+          title: '',
+          type: null
         },
         form: {}
       }
     },
     created() {
       this.fetch()
+      this.fetchMore()
     },
     computed: {
       validator() {
@@ -215,42 +235,77 @@
           this.departmentList = JSON.parse(res.data.Data)
         })
       },
+      resetForm() {
+        this.form = {
+          UserId: null,
+          UserName: null,
+          IsValid: true,
+          Departmentid: null,
+          RealName: '',
+          RoleId: [],
+          Position: '',
+          Qualification: '',
+          Call: '',
+          HandPhone: '',
+          Email: '',
+          MedicalOrgId: this.moid,
+          Password: ''
+        }
+      },
       add() {
         this.modal.title = '添加用户'
-        this.form = {
-          DepartId: this.departmentList[0].DepartId
-        }
+        this.modal.type = 'add'
+        this.resetForm()
+        this.form.Departmentid = this.departmentList[0].Departmentid
         $('#modal_user').modal()
       },
       update(item) {
         this.modal.title = `【更新角色】${item.UserName}`
-        this.form = {
-          UserId: item.UserID,
-          IsValid: item.IsValid,
-          DepartId: null,
-          RealName: null
-        }
+        this.modal.type = 'update'
+        this.resetForm()
+        this.form.UserId = item.UserID
+        this.form.UserName = item.UserName
+        this.form.IsValid = item.IsValid
         api('usersInfo', {
-          'Userid': '999999001002'
+          'Userid': item.UserID
         }).then(res => {
           res = JSON.parse(res.data.Data)[0]
-          this.form.DepartId = res.DEPARTMENTID
+          this.form.Departmentid = res.DEPARTMENTID
           this.form.RealName = res.REALNAME
+          this.form.Call = res.CALL
+          this.form.HandPhone = res.HANDPHONE
+          this.form.Position = res.POSITION
+          this.form.Qualification = res.QUALIFICATION
+          this.form.Email = res.EMAIL
         })
         api('getRoleIdByUserId', {
           Userid: item.UserID
         }).then(res => {
           let roles = JSON.parse(res.data.Data)
-          this.roleList.forEach(role => {
-            roles.forEach(v => {
-              if (v.ROLEID === role.ROLEID) role.isChecked = true
-            })
+          let tempArr = []
+          roles.forEach(v => {
+            tempArr.push(v.ROLEID)
           })
+          this.form.RoleId = tempArr
         })
         $('#modal_user').modal()
       },
       save() {
-        console.log()
+        let form = this.form
+        form.RoleId = form.RoleId.join(',')
+
+        let postModule = ''
+        if (this.modal.type === 'add') {
+          postModule = 'addUsers'
+        } else {
+          postModule = 'modifyUsers'
+        }
+
+        api(postModule, form).then(res => {
+          $('#modal_user').modal('hide')
+          if (!res.data.Status) return
+          this.fetch()
+        })
       }
     },
     watch: {

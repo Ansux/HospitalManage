@@ -1,3 +1,5 @@
+require('es6-promise').polyfill()
+
 import axios from 'axios'
 import Qs from 'qs'
 const URL = 'http://localhost/website/data/post'
@@ -27,10 +29,24 @@ const routes = {
   getRoleIdByUserId: 'Role.GetRoleIdByUserId',
   getRolesByMedicalOrgID: 'Roles.GetRolesByMedicalOrgID',
   getExamDeptByHosID: 'Department.GetExamDeptByHosID',
+  addUsers: 'Users.AddUsers',
+  modifyUsers: 'Users.ModifyUsers',
+  // 套餐
+  getExamItems: 'ExamGroup.GetExamItems',
+  getExamGroup: 'User.GetExamGroup',
+  saveExamGroup: 'ExamGroup.SaveExamGroup',
+  // 设备
+  getDevicesByPage: 'Device.GetDevicesByPage',
+  modifyDevice: 'Device.ModifyDevice',
+  addDevice: 'Device.AddDevice',
+  getDeviceTypes: 'Device.GetDeviceTypes',
+  // 系统设置
+  getMedicalOrgSetting: 'MedicalOrg.GetMedicalOrgSetting',
+  saveMedicalSetting: 'MedicalOrg.SaveMedicalSetting',
   // 客户端
+  disableClient: 'Client.DisableClient',
   getClientByPage: 'Client.GetClientByPage',
   getVersionByPage: 'Client.GetVersionByPage',
-  getMedicalOrgSetting: 'MedicalOrg.GetMedicalOrgSetting',
   getServiceType: 'Charge.GetServiceType'
 }
 
