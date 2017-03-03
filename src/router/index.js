@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 import MedicalOrg from 'components/MedicalOrg/Index'
+import Right from 'components/Right/Index'
 import Department from 'components/Department/Index'
 import Roles from 'components/Roles/Index'
 import User from 'components/User/Index'
@@ -21,6 +23,11 @@ export default new Router({
       path: '/',
       name: 'MedicalOrg',
       component: MedicalOrg
+    },
+    {
+      path: '/Right',
+      name: 'Right',
+      component: Right
     },
     {
       path: '/Department',

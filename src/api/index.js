@@ -13,11 +13,14 @@ const routes = {
   getHosByPage: 'MedicalOrg.GetHosByPage',
   getMedicalOrgByOrgID: 'MedicalOrg.GetMedicalOrgByOrgID',
   modifyMedicalOrg: 'MedicalOrg.ModifyMedicalOrg',
+  getUsersByRightIdAndDepartmentId: 'Rights.GetUsersByRightIdAndDepartmentId',
   // 科室
   getDeptByPage: 'Department.GetDeptByPage',
   addExamDep: 'Department.AddExamDep',
   deleteExamDep: 'Department.DeleteExamDep',
   modifyExamDep: 'Department.ModifyExamDep',
+  getExamDeptByHosID: 'Department.GetExamDeptByHosID',
+  getDepartmentRightById: 'DepartmentRight.GetDepartmentRightById',
   // 角色
   getUsersByPage: 'BackUser.GetUsersByPage',
   getRoleByMidPage: 'Roles.GetRoleByMidPage',
@@ -28,13 +31,14 @@ const routes = {
   usersInfo: 'User.UsersInfo',
   getRoleIdByUserId: 'Role.GetRoleIdByUserId',
   getRolesByMedicalOrgID: 'Roles.GetRolesByMedicalOrgID',
-  getExamDeptByHosID: 'Department.GetExamDeptByHosID',
   addUsers: 'Users.AddUsers',
   modifyUsers: 'Users.ModifyUsers',
+  deleteUserRoleRange: 'Users.DleteUserRoleRange',
   // 套餐
   getExamItems: 'ExamGroup.GetExamItems',
   getExamGroup: 'User.GetExamGroup',
   saveExamGroup: 'ExamGroup.SaveExamGroup',
+  enableExamGroup: 'ExamGroup.EnableExamGroup',
   // 设备
   getDevicesByPage: 'Device.GetDevicesByPage',
   modifyDevice: 'Device.ModifyDevice',

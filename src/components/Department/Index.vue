@@ -16,7 +16,7 @@
             <th width="12%">添加时间</th>
             <th width="10%">是否可用</th>
             <th width="10%">可否检查</th>
-            <th width="10%">操作</th>
+            <th width="20%">操作</th>
           </tr>
         </thead>
         <tbody>
@@ -28,6 +28,7 @@
             <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsValid, 'glyphicon-remove': !item.IsValid}"></span></td>
             <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsSampleDep, 'glyphicon-remove': !item.IsSampleDep}"></span></td>
             <td>
+              <button type="button" @click="right(item)" class="btn btn-xs btn-primary">分配权限</button>
               <button type="button" @click="update(item)" class="btn btn-xs btn-warning">更新</button>
               <button type="button" @click="remove(item)" class="btn btn-xs btn-danger">删除</button>
             </td>
@@ -36,7 +37,7 @@
       </table>
       <pager :page="page" @fetch="fetch"></pager>
       <confirm :cf="cf"></confirm>
-      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal fade" id="modal_depart" tabindex="-1" role="dialog" data-backdrop="static">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -96,6 +97,7 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
+      <Right :rightInfo="rightInfo" :moid="moid" v-if="rightInfo.show"></Right>
       <alert :alert="alert"></alert>
       <!-- /.modal -->
     </div>
@@ -108,6 +110,7 @@
   import Loading from 'components/common/loading'
   import Confirm from 'components/common/confirm'
   import Alert from 'components/common/alert'
+  import Right from './right'
   export default {
     props: {
       moid: {
@@ -118,7 +121,8 @@
       Pager,
       Loading,
       Alert,
-      Confirm
+      Confirm,
+      Right
     },
     data() {
       return {
@@ -135,7 +139,8 @@
         },
         form: {},
         alert: {},
-        cf: {}
+        cf: {},
+        rightInfo: {}
       }
     },
     watch: {
@@ -177,7 +182,7 @@
           IsValid: true,
           IsSampleDep: false
         }
-        $('#myModal').modal()
+        $('#modal_depart').modal()
       },
       remove(item) {
         console.log(item)
@@ -207,7 +212,7 @@
           IsSampleDep: item.IsSampleDep,
           DepartId: item.DepartId
         }
-        $('#myModal').modal()
+        $('#modal_depart').modal()
       },
       save() {
         let form = this.form
@@ -240,7 +245,18 @@
             this.fetch()
           })
         }
-        $('#myModal').modal('hide')
+        $('#modal_depart').modal('hide')
+      },
+      right(item) {
+        this.rightInfo = {
+          show: true,
+          moid: this.moid,
+          DepartId: item.DepartId,
+          DepartName: item.DepartName
+        }
+        this.$nextTick(() => {
+          $('#modal_right').modal()
+        })
       }
     }
   }
@@ -249,13 +265,4 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-  .breadcrumb {
-    .action {
-      &:before {
-        display: none;
-      }
-      float: right;
-    }
-  }
-
 </style>

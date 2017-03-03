@@ -27,7 +27,7 @@
             <td>{{examItemsStr(item.ExamItems)}}</span></td>
             <td>
               <button type="button" @click="update(item)" class="btn btn-xs btn-warning">更新</button>
-              <button type="button" @click="disabled(item)" class="btn btn-xs btn-danger">禁用</button>
+              <button type="button" @click="disabled(item.ExamGroupId, index)" class="btn btn-xs btn-danger">禁用</button>
             </td>
           </tr>
         </tbody>
@@ -126,8 +126,8 @@
     data() {
       return {
         isFetching: false,
-        examItemList: [],
         examGroupList: [],
+        examItemList: [],
         page: {
           current: 1,
           size: 5,
@@ -137,7 +137,12 @@
           title: '',
           type: ''
         },
-        form: {},
+        form: {
+          ExamGroupId: '',
+          Cost: '',
+          ExamGroupName: '',
+          ExamItems: []
+        },
         alert: {},
         cf: {}
       }
@@ -151,7 +156,8 @@
     },
     computed: {
       validator() {
-        return false
+        let form = this.form
+        return (form.ExamItems.length === 0 || form.ExamGroupId === '' || form.ExamGroupName === '' || form.Cost === '')
       }
     },
     methods: {
@@ -215,23 +221,15 @@
         })
         return tempStr.substr(0, tempStr.length - 1)
       },
-      save() {
-        let form = this.form
-        let postForm = {
-          ItemGroupName: form.ExamGroupName,
-          ItemGroupCost: form.Cost,
-          ItemGroupArray: form.ExamItems.join(','),
-          medicalOrgId: this.moid,
-          ExamGroupID: this.ExamGroupId
-        }
-        console.log(postForm)
-        // api('saveExamGroup', postForm).then(res => {
-        //   console.log(res)
-        // })
-      },
       add() {
         this.modal.title = '添加套餐'
         this.modal.type = 'add'
+        this.form = {
+          ExamGroupId: '',
+          Cost: '',
+          ExamGroupName: '',
+          ExamItems: []
+        }
         $('#modal_pagekage').modal()
       },
       update(item) {
@@ -251,8 +249,39 @@
         }
         $('#modal_pagekage').modal()
       },
-      disabled() {
-        alert()
+      save() {
+        let form = this.form
+        let postForm = {
+          ExamGroupID: form.ExamGroupId,
+          ItemGroupName: form.ExamGroupName,
+          ItemGroupCost: form.Cost,
+          ItemGroupArray: form.ExamItems.join(','),
+          medicalOrgId: this.moid
+        }
+        api('saveExamGroup', postForm).then(res => {
+          if (!res.data.Status) return
+          this.fetch()
+          this.alert = {
+            show: true,
+            text: '保存成功！',
+            timer: 2000
+          }
+          $('#modal_pagekage').modal('hide')
+        })
+      },
+      disabled(ExamGroupID, index) {
+        let _this = this
+        this.cf = {
+          show: true,
+          text: '确定要禁用此套餐么？',
+          ok() {
+            api('enableExamGroup', {ExamGroupID: ExamGroupID, IsValid: false}).then(res => {
+              if (!res.data.Status) return
+              this.show = false
+              _this.examGroupList.splice(index, 1)
+            })
+          }
+        }
       }
     }
   }
