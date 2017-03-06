@@ -21,15 +21,7 @@
           <router-link tag="li" to="/Department"><a>科室</a></router-link>
           <router-link tag="li" to="/Roles"><a>角色</a></router-link>
           <router-link tag="li" to="/User"><a>用户</a></router-link>
-          <template v-if="uid==='superuser'">
-            <router-link tag="li" to="/Device"><a>设备</a></router-link>
-            <router-link tag="li" to="/CallNumber"><a>叫号</a></router-link>
-            <router-link tag="li" to="/Package"><a>套餐</a></router-link>
-            <router-link tag="li" to="/Client"><a>客户端监控</a></router-link>
-            <router-link tag="li" to="/ClientUpdate"><a>客户端升级</a></router-link>
-            <router-link tag="li" to="/SystemSetting"><a>系统设置</a></router-link>
-            <router-link tag="li" to="/CloudSetting"><a>云配置</a></router-link>
-          </template>
+          <slot></slot>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <!--<li><a href="#">Link</a></li>-->
@@ -51,13 +43,7 @@
 </template>
 
 <script>
-  export default {
-    props: ['uid'],
-    created() {
-      console.log(this.uid)
-    }
-  }
-
+  export default {}
 </script>
 
 <style lang="scss">
