@@ -1,79 +1,71 @@
 <template>
-  <div class="category callNumber-wraper">
-    <ol class="breadcrumb">
-      <li><a href="#">首页</a></li>
-      <li class="active">叫号</li>
-    </ol>
-    <div class="content-warper">
-      <Loading :isFetching="isFetching"></Loading>
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="table-warper">
-            <div class="title">科室列表</div>
-            <table class="table table-bordered table-striped">
-              <tbody>
-                <tr v-for="(item, index) in departmentList">
-                  <td>
-                    <label class="radio-inline">
+  <Container action="叫号">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="table-warper">
+          <div class="title">科室列表</div>
+          <table class="table table-bordered table-striped">
+            <tbody>
+              <tr v-for="(item, index) in departmentList">
+                <td>
+                  <label class="radio-inline">
                       <input type="radio" :value="item.DepartId" v-model="select.DepartId" @change="changeDepart"> {{item.DepartName}}
                     </label>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <pager :page="page" @fetch="fetch"></pager>
-          </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <pager :page="page" @fetch="fetch"></pager>
         </div>
-        <div class="col-sm-4">
-          <div class="table-warper">
-            <div class="title">设备列表</div>
-            <table class="table table-bordered table-striped">
-              <tbody>
-                <tr v-for="(item, index) in deviceList">
-                  <td>
-                    <label class="checkbox-inline">
+      </div>
+      <div class="col-sm-4">
+        <div class="table-warper">
+          <div class="title">设备列表</div>
+          <table class="table table-bordered table-striped">
+            <tbody>
+              <tr v-for="(item, index) in deviceList">
+                <td>
+                  <label class="checkbox-inline">
                       <input type="checkbox" :value="item.DeviceId" v-model="select.DeviceId"> {{item.DeviceName}}
                     </label>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <pager :page="page2" @fetch="fetchDeviceData"></pager>
-          </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <pager :page="page2" @fetch="fetchDeviceData"></pager>
         </div>
-        <div class="col-sm-4">
-          <div class="table-warper">
-            <div class="title">温馨提醒内容设置:</div>
-            <div class="form-group">
-              <textarea cols="30" rows="6" class="form-control" v-model="form.CallNumberContent"></textarea>
-            </div>
-            <div class="form-group row">
-              <label class="control-label col-sm-4">是否启用</label>
-              <div class="col-sm-8">
-                <label class="radio-inline">
+      </div>
+      <div class="col-sm-4">
+        <div class="table-warper">
+          <div class="title">温馨提醒内容设置:</div>
+          <div class="form-group">
+            <textarea cols="30" rows="6" class="form-control" v-model="form.CallNumberContent"></textarea>
+          </div>
+          <div class="form-group row">
+            <label class="control-label col-sm-4">是否启用</label>
+            <div class="col-sm-8">
+              <label class="radio-inline">
                   <input type="radio" value="1" v-model="form.CallNumberEnable"> 是
                 </label>
-                <label class="radio-inline">
+              <label class="radio-inline">
                   <input type="radio" value="0" v-model="form.CallNumberEnable"> 否
                 </label>
-              </div>
             </div>
-            <div class="form-group">
-              <button class="btn btn-success" @click="save" :disabled="validator">保 存</button>
-            </div>
+          </div>
+          <div class="form-group">
+            <button class="btn btn-success" @click="save" :disabled="validator">保 存</button>
           </div>
         </div>
       </div>
-      <alert :alert="alert"></alert>
-      <!-- /.modal -->
     </div>
-  </div>
+    <alert :alert="alert"></alert>
+  </Container>
 </template>
 
 <script>
   import api from 'src/api'
+  import Container from 'components/common/container'
   import Pager from 'components/common/pager'
-  import Loading from 'components/common/loading'
   import Alert from 'components/common/alert'
   export default {
     props: {
@@ -82,8 +74,8 @@
       }
     },
     components: {
+      Container,
       Pager,
-      Loading,
       Alert
     },
     data() {
@@ -152,7 +144,10 @@
         })
       },
       fetchSettingData() {
-        api('getMedicalOrgSetting', {HosID: this.moid, SystemSettingType: 'CallNumberSetting'}).then(res => {
+        api('getMedicalOrgSetting', {
+          HosID: this.moid,
+          SystemSettingType: 'CallNumberSetting'
+        }).then(res => {
           res = JSON.parse(res.data.Data)
           if (res && res.CallNumberSetting) {
             res.CallNumberSetting.DepartDevice = JSON.parse(res.CallNumberSetting.DepartDevice)

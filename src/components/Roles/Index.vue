@@ -1,89 +1,84 @@
 <template>
-  <div class="category medical-wraper">
-    <ol class="breadcrumb">
-      <li><a href="#">首页</a></li>
-      <li class="active">角色</li>
-      <li class="action"><button @click="add" class="btn btn-xs btn-default">添加角色</button></li>
-    </ol>
-    <div class="content-warper">
-      <table class="table table-bordered table-striped table-role">
-        <thead>
-          <tr>
-            <th width="10%">序号</th>
-            <th>角色名称</th>
-            <th width="30%">所在医院</th>
-            <th width="80">是否可用</th>
-            <th width="10%">操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in roleList">
-            <td>{{item.Row}}</td>
-            <td>{{item.RoleName}}</td>
-            <td>{{item.MedicalOrgName}}</td>
-            <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsValid, 'glyphicon-remove': !item.IsValid,}"></span></td>
-            <td>
-              <button href="" class="btn btn-xs btn-warning" @click="update(item)">更新</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <pager :page="page" @fetch="fetch"></pager>
-      <div class="modal fade modal-roles" id="modal_roles" tabindex="-1" role="dialog" data-backdrop="static">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">{{modal.title}}</h4>
-            </div>
-            <form action="" class="form-horizontal">
-              <div class="modal-body">
-                <div class="form-group">
-                  <label for="" class="col-sm-3 control-label">角色名称</label>
-                  <div class="col-sm-9">
-                    <input type="text" class="form-control" v-model="form.RoleName">
-                  </div>
+  <Container action="角色">
+    <table class="table table-bordered table-striped table-role">
+      <thead>
+        <tr>
+          <th width="10%">序号</th>
+          <th>角色名称</th>
+          <th width="30%">所在医院</th>
+          <th width="80">是否可用</th>
+          <th width="10%">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in roleList">
+          <td>{{item.Row}}</td>
+          <td>{{item.RoleName}}</td>
+          <td>{{item.MedicalOrgName}}</td>
+          <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsValid, 'glyphicon-remove': !item.IsValid,}"></span></td>
+          <td>
+            <button href="" class="btn btn-xs btn-warning" @click="update(item)">更新</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <pager :page="page" @fetch="fetch"></pager>
+    <div class="modal fade modal-roles" id="modal_roles" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">{{modal.title}}</h4>
+          </div>
+          <form action="" class="form-horizontal">
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="" class="col-sm-3 control-label">角色名称</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" v-model="form.RoleName">
                 </div>
-                <div class="form-group">
-                  <label for="" class="col-sm-3 control-label">是否启用</label>
-                  <div class="col-sm-9">
-                    <label class="radio-inline">
+              </div>
+              <div class="form-group">
+                <label for="" class="col-sm-3 control-label">是否启用</label>
+                <div class="col-sm-9">
+                  <label class="radio-inline">
                       <input type="radio" name="inlineRadioOptions" v-model="form.IsValid" value="true"> 是
                     </label>
-                    <label class="radio-inline">
+                  <label class="radio-inline">
                       <input type="radio" name="inlineRadioOptions" v-model="form.IsValid" value="false"> 否
                     </label>
-                  </div>
                 </div>
-                <div class="form-group">
-                  <label for="" class="col-sm-3 control-label">角色权限</label>
-                  <div class="col-sm-9">
-                    <label class="checkbox-inline" v-for="item in rightsList" :class="{'checked': item.isChecked}">
+              </div>
+              <div class="form-group">
+                <label for="" class="col-sm-3 control-label">角色权限</label>
+                <div class="col-sm-9">
+                  <label class="checkbox-inline" v-for="item in rightsList" :class="{'checked': item.isChecked}">
                       <input type="checkbox" :checked="item.isChecked" @change="item.isChecked=!item.isChecked"> {{item.RIGHTNAME}}
                     </label>
-                  </div>
                 </div>
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" :disabled="validator" class="btn btn-primary" @click="save">提 交</button>
-              </div>
-            </form>
-          </div>
-          <!-- /.modal-content -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <button type="button" :disabled="validator" class="btn btn-primary" @click="save">提 交</button>
+            </div>
+          </form>
         </div>
-        <!-- /.modal-dialog -->
+        <!-- /.modal-content -->
       </div>
+      <!-- /.modal-dialog -->
     </div>
-  </div>
+  </Container>
 </template>
 
 <script>
+  import Container from 'components/common/container'
   import Pager from 'components/common/pager'
   import api from 'src/api'
   export default {
     props: ['moid'],
     components: {
+      Container,
       Pager
     },
     data() {

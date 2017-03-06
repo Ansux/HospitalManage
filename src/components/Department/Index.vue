@@ -1,113 +1,106 @@
 <template>
-  <div class="category department-wraper">
-    <ol class="breadcrumb">
-      <li><a href="#">首页</a></li>
-      <li class="active">科室</li>
-      <li class="action"><button @click="add" class="btn btn-xs btn-default">添加科室</button></li>
-    </ol>
-    <div class="content-warper">
-      <Loading :isFetching="isFetching"></Loading>
-      <table class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th width="10%">序号</th>
-            <th>科室名称</th>
-            <th>英文名称</th>
-            <th width="12%">添加时间</th>
-            <th width="10%">是否可用</th>
-            <th width="10%">可否检查</th>
-            <th width="20%">操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in departmentList">
-            <td>{{item.Row}}</td>
-            <td>{{item.DepartName}}</td>
-            <td>{{item.AnotherName}}</td>
-            <td>{{item.CreateTime?item.CreateTime.substr(0,10):null}}</td>
-            <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsValid, 'glyphicon-remove': !item.IsValid}"></span></td>
-            <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsSampleDep, 'glyphicon-remove': !item.IsSampleDep}"></span></td>
-            <td>
-              <button type="button" @click="right(item)" class="btn btn-xs btn-primary">分配权限</button>
-              <button type="button" @click="update(item)" class="btn btn-xs btn-warning">更新</button>
-              <button type="button" @click="remove(item)" class="btn btn-xs btn-danger">删除</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <pager :page="page" @fetch="fetch"></pager>
-      <confirm :cf="cf"></confirm>
-      <div class="modal fade" id="modal_depart" tabindex="-1" role="dialog" data-backdrop="static">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">{{modal.title}}</h4>
-            </div>
-            <form action="" class="form-horizontal">
-              <div class="modal-body">
-                <div class="form-group">
-                  <label class="control-label col-sm-3">科室代码</label>
-                  <div class="col-sm-9">
-                    <input type="text" class="form-control" v-model="form.DepartId" :disabled="modal.type==='update'">
-                  </div>
+  <Container action="医院资料">
+    <Loading :isFetching="isFetching"></Loading>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th width="10%">序号</th>
+          <th>科室名称</th>
+          <th>英文名称</th>
+          <th width="12%">添加时间</th>
+          <th width="10%">是否可用</th>
+          <th width="10%">可否检查</th>
+          <th width="20%">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in departmentList">
+          <td>{{item.Row}}</td>
+          <td>{{item.DepartName}}</td>
+          <td>{{item.AnotherName}}</td>
+          <td>{{item.CreateTime?item.CreateTime.substr(0,10):null}}</td>
+          <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsValid, 'glyphicon-remove': !item.IsValid}"></span></td>
+          <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsSampleDep, 'glyphicon-remove': !item.IsSampleDep}"></span></td>
+          <td>
+            <button type="button" @click="right(item)" class="btn btn-xs btn-primary">分配权限</button>
+            <button type="button" @click="update(item)" class="btn btn-xs btn-warning">更新</button>
+            <button type="button" @click="remove(item)" class="btn btn-xs btn-danger">删除</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <pager :page="page" @fetch="fetch"></pager>
+    <confirm :cf="cf"></confirm>
+    <div class="modal fade" id="modal_depart" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">{{modal.title}}</h4>
+          </div>
+          <form action="" class="form-horizontal">
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="control-label col-sm-3">科室代码</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" v-model="form.DepartId" :disabled="modal.type==='update'">
                 </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-3">科室名称</label>
-                  <div class="col-sm-9">
-                    <input type="text" class="form-control" v-model="form.DepartName">
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-3">科室名称</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" v-model="form.DepartName">
                 </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-3">英文名称</label>
-                  <div class="col-sm-9">
-                    <input type="text" class="form-control" v-model="form.AnotherName">
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-3">英文名称</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" v-model="form.AnotherName">
                 </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-3">是否启用</label>
-                  <div class="col-sm-9">
-                    <label class="radio-inline">
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-3">是否启用</label>
+                <div class="col-sm-9">
+                  <label class="radio-inline">
                       <input type="radio" value="true" v-model="form.IsValid"> 是
                     </label>
-                    <label class="radio-inline">
+                  <label class="radio-inline">
                       <input type="radio" value="false" v-model="form.IsValid"> 否
                     </label>
-                  </div>
                 </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-3">可否检查</label>
-                  <div class="col-sm-9">
-                    <label class="radio-inline">
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-3">可否检查</label>
+                <div class="col-sm-9">
+                  <label class="radio-inline">
                       <input type="radio" value="true" v-model="form.IsSampleDep"> 是
                     </label>
-                    <label class="radio-inline">
+                  <label class="radio-inline">
                       <input type="radio" value="false" v-model="form.IsSampleDep"> 否
                     </label>
-                  </div>
                 </div>
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" :disabled="validator" class="btn btn-primary" @click="save">提 交</button>
-              </div>
-            </form>
-          </div>
-          <!-- /.modal-content -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <button type="button" :disabled="validator" class="btn btn-primary" @click="save">提 交</button>
+            </div>
+          </form>
         </div>
-        <!-- /.modal-dialog -->
+        <!-- /.modal-content -->
       </div>
-      <Right :rightInfo="rightInfo" :moid="moid" v-if="rightInfo.show"></Right>
-      <alert :alert="alert"></alert>
-      <!-- /.modal -->
+      <!-- /.modal-dialog -->
     </div>
-  </div>
+    <Right :rightInfo="rightInfo" :moid="moid" v-if="rightInfo.show"></Right>
+    <alert :alert="alert"></alert>
+    <!-- /.modal -->
+  </Container>
 </template>
 
 <script>
   import api from 'src/api'
+  import Container from 'components/common/container'
   import Pager from 'components/common/pager'
-  import Loading from 'components/common/loading'
   import Confirm from 'components/common/confirm'
   import Alert from 'components/common/alert'
   import Right from './right'
@@ -118,8 +111,8 @@
       }
     },
     components: {
+      Container,
       Pager,
-      Loading,
       Alert,
       Confirm,
       Right
@@ -265,4 +258,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
+
+
 </style>

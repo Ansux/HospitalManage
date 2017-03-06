@@ -2,9 +2,22 @@ require('es6-promise').polyfill()
 
 import axios from 'axios'
 import Qs from 'qs'
-const URL = 'http://localhost/website/data/post'
 
-function qsParams(params) {
+const URL = 'http://localhost/website/data/post'
+const isOnDev = process.env.NODE_ENV === 'development'
+
+let axiosConfig = {}
+if (isOnDev) {
+  axiosConfig = {
+    headers: {
+      'Accept': 'text/html',
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+    }
+  }
+}
+
+function qsParams(env, params) {
+  if (isOnDev) return params
   return Qs.stringify(params)
 }
 
@@ -55,13 +68,8 @@ const routes = {
 }
 
 export default (routeKey, params) => {
-  return axios.post(URL, qsParams({
+  return axios.post(URL, qsParams(isOnDev, {
     module: routes[routeKey],
     data: JSON.stringify(params)
-  }), {
-    headers: {
-      'Accept': 'text/html',
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-    }
-  })
+  }), axiosConfig)
 }

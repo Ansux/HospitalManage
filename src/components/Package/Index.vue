@@ -1,114 +1,105 @@
 <template>
-  <div class="category package-wraper">
-    <ol class="breadcrumb">
-      <li><a href="#">首页</a></li>
-      <li class="active">套餐</li>
-      <li class="action"><button class="btn btn-xs btn-default" @click="add">添加套餐</button></li>
-    </ol>
-    <div class="content-warper">
-      <Loading :isFetching="isFetching"></Loading>
-      <table class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th width="10%">序号</th>
-            <th>套餐号</th>
-            <th>套餐名</th>
-            <th>套餐价格</th>
-            <th>套餐项目</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in examGroupList">
-            <td>{{index+1}}</td>
-            <td>{{item.ExamGroupId}}</td>
-            <td>{{item.ExamGroupName}}</td>
-            <td>{{item.Cost}} 元</td>
-            <td>{{examItemsStr(item.ExamItems)}}</span></td>
-            <td>
-              <button type="button" @click="update(item)" class="btn btn-xs btn-warning">更新</button>
-              <button type="button" @click="disabled(item.ExamGroupId, index)" class="btn btn-xs btn-danger">禁用</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <pager :page="page" @fetch="fetch"></pager>
-      <confirm :cf="cf"></confirm>
-      <div class="modal fade" id="modal_pagekage" tabindex="-1" role="dialog" data-backdrop="static">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">{{modal.title}}</h4>
-            </div>
-            <form action="" class="form-horizontal form-package">
-              <div class="modal-body">
-                <div class="row">
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label class="control-label col-sm-4">套餐号</label>
-                      <div class="col-sm-8">
-                        <input type="text" class="form-control" v-model="form.ExamGroupId" :disabled="modal.type==='update'">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label class="control-label col-sm-4">套餐名称</label>
-                      <div class="col-sm-8">
-                        <input type="text" class="form-control" v-model="form.ExamGroupName">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label class="control-label col-sm-4">套餐价格</label>
-                      <div class="col-sm-8">
-                        <input type="text" class="form-control" v-model="form.Cost">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="panel panel-default">
-                  <div class="panel-heading">检查项目</div>
-                  <div class="panel-body">
-                    <div class="row">
-                      <div class="col-sm-4" v-for="examItem in examItemList">
-                        <table class="table table-bordered table-striped">
-                        <caption>检查项目代码【{{examItem.code}}】</caption>
-                          <tbody>
-                            <tr v-for="item in examItem.items">
-                              <td>
-                                <label class="checkbox-inline"><input type="checkbox" :value="item.ExamItemId" v-model="form.ExamItems"> {{item.ExamItemName}}</label>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" :disabled="validator" class="btn btn-primary" @click="save">提 交</button>
-              </div>
-            </form>
+  <Container action="套餐">
+    <li class="action" slot="breadcrumb"><button class="btn btn-xs btn-default" @click="add">添加套餐</button></li>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th width="10%">序号</th>
+          <th>套餐号</th>
+          <th>套餐名</th>
+          <th>套餐价格</th>
+          <th>套餐项目</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in examGroupList">
+          <td>{{index+1}}</td>
+          <td>{{item.ExamGroupId}}</td>
+          <td>{{item.ExamGroupName}}</td>
+          <td>{{item.Cost}} 元</td>
+          <td>{{examItemsStr(item.ExamItems)}}</span>
+          </td>
+          <td>
+            <button type="button" @click="update(item)" class="btn btn-xs btn-warning">更新</button>
+            <button type="button" @click="disabled(item.ExamGroupId, index)" class="btn btn-xs btn-danger">禁用</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <pager :page="page" @fetch="fetch"></pager>
+    <confirm :cf="cf"></confirm>
+    <div class="modal fade" id="modal_pagekage" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">{{modal.title}}</h4>
           </div>
-          <!-- /.modal-content -->
+          <form action="" class="form-horizontal form-package">
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label class="control-label col-sm-4">套餐号</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" v-model="form.ExamGroupId" :disabled="modal.type==='update'">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label class="control-label col-sm-4">套餐名称</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" v-model="form.ExamGroupName">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label class="control-label col-sm-4">套餐价格</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" v-model="form.Cost">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">检查项目</div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-sm-4" v-for="examItem in examItemList">
+                      <table class="table table-bordered table-striped">
+                        <caption>检查项目代码【{{examItem.code}}】</caption>
+                        <tbody>
+                          <tr v-for="item in examItem.items">
+                            <td>
+                              <label class="checkbox-inline"><input type="checkbox" :value="item.ExamItemId" v-model="form.ExamItems"> {{item.ExamItemName}}</label>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <button type="button" :disabled="validator" class="btn btn-primary" @click="save">提 交</button>
+            </div>
+          </form>
         </div>
-        <!-- /.modal-dialog -->
       </div>
-      <alert :alert="alert"></alert>
-      <!-- /.modal -->
     </div>
-  </div>
+    <alert :alert="alert"></alert>
+  </Container>
 </template>
 
 <script>
   import api from 'src/api'
+  import Container from 'components/common/container'
   import Pager from 'components/common/pager'
-  import Loading from 'components/common/loading'
   import Confirm from 'components/common/confirm'
   import Alert from 'components/common/alert'
   export default {
@@ -118,8 +109,8 @@
       }
     },
     components: {
+      Container,
       Pager,
-      Loading,
       Alert,
       Confirm
     },
@@ -192,14 +183,19 @@
           })
           this.examItemList = tempArr
         })
-        api('getExamGroup', { MedicalOrgId: this.moid }).then(res => {
+        api('getExamGroup', {
+          MedicalOrgId: this.moid
+        }).then(res => {
           res = JSON.parse(res.data.Data)
           let arrIndex = null
           let tempArr = []
           let itemObj = {}
           res.forEach(v => {
             arrIndex = this.arrIndexOf(tempArr, 'ExamGroupId', v.ExamGroupId)
-            itemObj = {ExamItemId: v.ExamItemId, ExamItemName: v.ExamItemName}
+            itemObj = {
+              ExamItemId: v.ExamItemId,
+              ExamItemName: v.ExamItemName
+            }
             if (arrIndex > -1) {
               tempArr[arrIndex].ExamItems.push(itemObj)
             } else {
@@ -275,7 +271,10 @@
           show: true,
           text: '确定要禁用此套餐么？',
           ok() {
-            api('enableExamGroup', {ExamGroupID: ExamGroupID, IsValid: false}).then(res => {
+            api('enableExamGroup', {
+              ExamGroupID: ExamGroupID,
+              IsValid: false
+            }).then(res => {
               if (!res.data.Status) return
               this.show = false
               _this.examGroupList.splice(index, 1)
