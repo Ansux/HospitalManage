@@ -4,12 +4,12 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">{{modal.title}}</h4>
+          <h4 class="modal-title">权限管理【{{form.DepartName}}】</h4>
         </div>
         <form action="" class="form-horizontal">
           <div class="modal-body">
             <div class="panel panel-default">
-              <div class="panel-heading">权限分配【{{form.DepartName}}】</div>
+              <div class="panel-heading">权限分配</div>
               <div class="panel-body">
                 <span class="checkbox-inline" v-for="item in rightList">
                   <input type="checkbox" :value="item.RIGHTID" v-model="form.rightIds">
@@ -18,7 +18,7 @@
               </div>
             </div>
             <div class="panel panel-default">
-              <div class="panel-heading">科室分配【】</div>
+              <div class="panel-heading">科室分配<span v-if="currentRightName">【{{currentRightName}}】</span></div>
               <div class="panel-body">
                 <label class="checkbox-inline" v-for="item in departList">
                   <input type="checkbox" :value="item.Row" v-model="departs" @change="departChange"> {{item.DepartName}}
@@ -50,7 +50,8 @@
         form: {},
         departs: [],
         rightIndex: null,
-        rights: []
+        rights: [],
+        currentRightName: null
       }
     },
     computed: {
@@ -64,7 +65,10 @@
     },
     methods: {
       fetch(depart) {
-        api('getDepartmentRightById', {departmentid: depart.DepartId, hospitalId: depart.moid}).then(res => {
+        api('getDepartmentRightById', {
+          departmentid: depart.DepartId,
+          hospitalId: depart.moid
+        }).then(res => {
           if (res.data.Data !== '') {
             res = JSON.parse(res.data.Data)
           } else {
@@ -73,7 +77,10 @@
 
           let tempArr = []
           res.forEach(v => {
-            tempArr.push({rightId: v.rigth_id, departIds: v.depart_id.split(',')})
+            tempArr.push({
+              rightId: v.rigth_id,
+              departIds: v.depart_id.split(',')
+            })
           })
           this.rights = tempArr
 
@@ -94,11 +101,15 @@
         api('getRights', {}).then(res => {
           this.rightList = JSON.parse(res.data.Data)
         })
-        api('getExamDeptByHosID', {MedicalOrgID: this.rightInfo.moid}).then(res => {
+        api('getExamDeptByHosID', {
+          MedicalOrgID: this.rightInfo.moid
+        }).then(res => {
           this.departList = JSON.parse(res.data.Data)
         })
       },
       selectDepart(item) {
+        this.currentRightName = item.RIGHTNAME
+        this.departs = []
         this.rights.forEach((v, k) => {
           if (v.rightId === item.RIGHTID) {
             this.departs = v.departIds
@@ -113,11 +124,21 @@
         let form = {
           hospitalId: this.rightInfo.moid,
           departmentid: this.rightInfo.DepartId,
+          data: ''
         }
+        let tempArr = []
         this.rights.forEach(v => {
-
+          tempArr.push(JSON.stringify({
+            right_id: v.rightId,
+            Chliddeparts_id: v.departIds.join(',')
+          }))
         })
-        console.log(JSON.stringify(this.rights))
+        form.data = tempArr.join('@')
+
+        api('modifyDepartmentRight', form).then(res => {
+          if (!res.data.Status) return
+          alert('更新成功。')
+        })
       },
       show() {
         this.fetch(this.rightInfo)
@@ -130,6 +151,7 @@
       'rightInfo.show': 'show'
     }
   }
+
 </script>
 
 <style lang="scss">
@@ -142,4 +164,5 @@
       }
     }
   }
+
 </style>
