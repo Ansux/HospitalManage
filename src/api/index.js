@@ -4,7 +4,7 @@ import axios from 'axios'
 import Qs from 'qs'
 
 const URL = 'http://localhost/website/data/post'
-const isOnDev = process.env.NODE_ENV === 'development'
+const isOnDev = (process.env.NODE_ENV === 'development')
 
 let axiosConfig = {}
 if (isOnDev) {
@@ -17,7 +17,7 @@ if (isOnDev) {
 }
 
 function qsParams(env, params) {
-  if (isOnDev) return params
+  if (!isOnDev) return params
   return Qs.stringify(params)
 }
 
