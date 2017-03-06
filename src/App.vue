@@ -1,8 +1,8 @@
 <template>
   <div id="app" class="app">
-    <navbar></navbar>
-    <side @changeMedicalOrgId="changeMedicalOrgId"></side>
-    <div class="view-wraper"><router-view :moid="moid"></router-view></div>
+    <navbar :uid="uid"></navbar>
+    <component :is="side" @changeMedicalOrgId="changeMedicalOrgId"></component>
+    <div class="view-wraper" :class="{'no-side': uid!=='superuser'}"><router-view :moid="moid"></router-view></div>
   </div>
 </template>
 
@@ -12,12 +12,21 @@
   export default {
     data() {
       return {
-        moid: ''
+        uid: uid,
+        moid: '',
+        side: null
       }
     },
     components: {
       Navbar,
       Side
+    },
+    created() {
+      if (this.uid === 'superuser') {
+        this.side = 'Side'
+      } else {
+        this.moid = uid
+      }
     },
     methods: {
       changeMedicalOrgId(medicalOrgId) {
@@ -38,6 +47,9 @@
     position: relative;
     .view-wraper {
       margin: 0 0 0 250px;
+      &.no-side {
+        margin: 0;
+      }
       .category {
         margin: 30px;
       }

@@ -17,7 +17,8 @@ module.exports = {
     'html'
   ],
   globals: {
-    $: true
+    $: true,
+    uid: true
   },
   // add your custom rules here
   'rules': {

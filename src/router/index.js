@@ -13,37 +13,40 @@ import Client from 'components/Client/Index'
 import ClientUpdate from 'components/ClientUpdate/Index'
 import SystemSetting from 'components/SystemSetting/Index'
 import CloudSetting from 'components/CloudSetting/Index'
+import NotFound from 'components/common/NotFound'
 
 Vue.use(Router)
 
-export default new Router({
-  linkActiveClass: 'active',
-  routes: [
-    {
-      path: '/',
-      name: 'MedicalOrg',
-      component: MedicalOrg
-    },
-    {
-      path: '/Right',
-      name: 'Right',
-      component: Right
-    },
-    {
-      path: '/Department',
-      name: 'Department',
-      component: Department
-    },
-    {
-      path: '/Roles',
-      name: 'Roles',
-      component: Roles
-    },
-    {
-      path: '/User',
-      name: 'User',
-      component: User
-    },
+let routes = [
+  {
+    path: '/',
+    name: 'MedicalOrg',
+    component: MedicalOrg
+  },
+  {
+    path: '/Right',
+    name: 'Right',
+    component: Right
+  },
+  {
+    path: '/Department',
+    name: 'Department',
+    component: Department
+  },
+  {
+    path: '/Roles',
+    name: 'Roles',
+    component: Roles
+  },
+  {
+    path: '/User',
+    name: 'User',
+    component: User
+  }
+]
+
+if (uid === 'superuser') {
+  routes = routes.concat([
     {
       path: '/Device',
       name: 'Device',
@@ -79,5 +82,15 @@ export default new Router({
       name: 'CloudSetting',
       component: CloudSetting
     }
-  ]
+  ])
+}
+
+routes.push({
+  path: '*',
+  component: NotFound
+})
+
+export default new Router({
+  linkActiveClass: 'active',
+  routes: routes
 })

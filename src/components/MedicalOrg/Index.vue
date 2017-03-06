@@ -3,7 +3,6 @@
     <ol class="breadcrumb">
       <li><a href="#">首页</a></li>
       <li class="active">医院资料</li>
-      <li class="action"><button @click="userRight" class="btn btn-xs btn-default">权限管理</button></li>
     </ol>
     <div class="content-warper">
       <div class="panel panel-default">
