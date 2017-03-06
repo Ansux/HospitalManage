@@ -44,7 +44,6 @@
 </template>
 
 <script>
-  import UserDepartment from 'assets/data/UserDepartment.json'
   import Pager from 'components/common/pager'
   import Confirm from 'components/common/confirm'
   import api from 'src/api'
@@ -57,9 +56,6 @@
     data() {
       return {
         clientList: [],
-        UserDepartment: (() => {
-          return JSON.parse(UserDepartment.Data)
-        })(),
         page: {
           current: 1,
           size: 5,
