@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped table-right">
       <caption>用户权限管理</caption>
       <thead>
         <tr>
@@ -150,8 +150,8 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-  .right-wraper {
-    .table caption {
+  .table-right {
+    caption {
       color: #333;
       background-color: #f5f5f5;
       border-color: #ddd;

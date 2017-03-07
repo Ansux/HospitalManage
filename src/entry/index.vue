@@ -6,6 +6,7 @@
 
 <script>
   export default {}
+
 </script>
 
 <style lang="scss">
@@ -14,13 +15,10 @@
     padding-top: 60px;
     font-family: 'Arial', 'Microsoft YaHei';
   }
-  
   .app {
     position: relative;
     .view-wraper {
-      .category {
-        margin: 30px;
-      }
+      padding: 20px;
     }
   }
 

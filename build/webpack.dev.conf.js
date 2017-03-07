@@ -28,12 +28,14 @@ module.exports = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
+      title: '医院管理',
       inject: true,
       excludeChunks: ['admin']
     }),
     new HtmlWebpackPlugin({
       filename: 'admin.html',
       template: 'index.html',
+      title: '信息科管理',
       inject: true,
       excludeChunks: ['sa']
     }),

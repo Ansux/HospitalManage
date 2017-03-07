@@ -112,17 +112,5 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-  .table-role {
-    .is-edit td {
-      background-color: #2aaaf3;
-    }
-  }
-  
-  .modal-user {
-    .checkbox-inline {
-      margin-left: 0;
-      margin-right: 10px;
-    }
-  }
 
 </style>

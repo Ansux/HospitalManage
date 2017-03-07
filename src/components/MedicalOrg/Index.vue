@@ -1,5 +1,5 @@
 <template>
-  <Container action="医院资料">
+  <Container action="医院资料" :isFetching="isFetching">
     <div class="panel panel-default">
       <div class="panel-heading">更新资料</div>
       <div class="panel-body">
@@ -61,6 +61,7 @@
     },
     data() {
       return {
+        isFetching: false,
         medicalOrg: {},
         alert: {}
       }
@@ -80,9 +81,11 @@
     },
     methods: {
       fetch() {
+        this.isFetching = true
         api('getMedicalOrgByOrgID', {
           HosID: this.moid
         }).then(res => {
+          this.isFetching = false
           res = JSON.parse(res.data.Data)
           if (res.length > 0) {
             res = res[0]
@@ -117,17 +120,4 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-  .category {
-    .breadcrumb {
-      padding: 12px 10px 12px 20px;
-      margin-bottom: 20px;
-      background: #fff;
-    }
-    .content-warper {
-      position: relative;
-      padding: 20px;
-      background-color: #fff;
-    }
-  }
-
 </style>

@@ -1,6 +1,6 @@
 <template>
   <Container action="叫号">
-    <div class="row">
+    <div class="row callNumber-wraper">
       <div class="col-sm-4">
         <div class="table-warper">
           <div class="title">科室列表</div>
@@ -127,10 +127,10 @@
           pageSize: this.page.size,
           str_search: ''
         }).then((res) => {
+          this.isFetching = false
           let data = JSON.parse(res.data.Data)
           this.page.totalPage = data.TotalPage
           this.departmentList = JSON.parse(data.ResultList)
-          this.isFetching = false
         })
       },
       fetchDeviceData() {
@@ -200,12 +200,10 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
   .callNumber-wraper {
-    .content-warper {
-      .table-warper {
-        border: solid 1px #eee;
-        background: #fbf9f9;
-        padding: 10px 20px;
-      }
+    .table-warper {
+      border: solid 1px #eee;
+      background: #fbf9f9;
+      padding: 10px 20px;
       .title {
         font-weight: 700;
         font-size: 16px;

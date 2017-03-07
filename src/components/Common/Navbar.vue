@@ -1,30 +1,26 @@
 <template>
   <nav class="navbar navbar-default top-navbar">
     <div class="container-fluid">
-      <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
           aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-        <a class="navbar-brand" href="#">医院管理</a>
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">{{brand}}</a>
       </div>
-
-      <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="menu">
-          <router-link tag="li" to="/" exact><a>资料</a></router-link>
-          <router-link tag="li" to="/Right"><a>权限</a></router-link>
+          <slot name="front-menuItems"></slot>
           <router-link tag="li" to="/Department"><a>科室</a></router-link>
+          <router-link tag="li" to="/Right"><a>权限</a></router-link>
           <router-link tag="li" to="/Roles"><a>角色</a></router-link>
           <router-link tag="li" to="/User"><a>用户</a></router-link>
-          <slot></slot>
+          <slot name="back-menuItems"></slot>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <!--<li><a href="#">Link</a></li>-->
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
               <span class="glyphicon glyphicon-user"></span> <span class="caret"></span></a>
@@ -43,7 +39,9 @@
 </template>
 
 <script>
-  export default {}
+  export default {
+    props: ['brand']
+  }
 </script>
 
 <style lang="scss">

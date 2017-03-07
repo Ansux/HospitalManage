@@ -1,15 +1,9 @@
-import MedicalOrg from 'components/MedicalOrg/Index'
 import Right from 'components/Right/Index'
 import Department from 'components/Department/Index'
 import Roles from 'components/Roles/Index'
 import User from 'components/User/Index'
 
 const routes = [
-  {
-    path: '/',
-    name: 'MedicalOrg',
-    component: MedicalOrg
-  },
   {
     path: '/Right',
     name: 'Right',

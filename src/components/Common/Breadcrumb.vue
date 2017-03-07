@@ -10,10 +10,14 @@
   export default {
     props: ['action']
   }
+
 </script>
 
 <style lang="scss">
   .breadcrumb {
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    background: #fff;
     .action {
       float: right;
       &::before {
@@ -21,4 +25,5 @@
       }
     }
   }
+
 </style>

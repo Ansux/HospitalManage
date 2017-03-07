@@ -18,7 +18,8 @@ module.exports = {
   ],
   globals: {
     $: true,
-    uid: true
+    moid: true,
+    apiUrl: true
   },
   // add your custom rules here
   'rules': {

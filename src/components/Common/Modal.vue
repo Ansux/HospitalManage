@@ -1,10 +1,10 @@
 <template>
-  <div class="modal fade" id="modal_depart" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal fade" :id="id" tabindex="-1" role="dialog" data-backdrop="static">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title"></h4>
+          <h4 class="modal-title">{{title}}</h4>
         </div>
         <div class="modal-body">
           <slot name="modal-body"></slot>
@@ -17,3 +17,29 @@
     </div>
   </div>
 </template>
+
+<script>
+  export default {
+    props: {
+      title: String,
+      id: {
+        type: String,
+        default: 'myModal'
+      },
+      validator: {
+        type: Boolean,
+        default: false
+      }
+    },
+    created() {},
+    methods: {
+      close() {
+        $(`#${this.id}`).modal('hide')
+      },
+      save() {
+        this.$emit('save')
+      }
+    }
+  }
+
+</script>

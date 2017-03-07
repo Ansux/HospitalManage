@@ -1,6 +1,6 @@
 <template>
   <App>
-    <navbar></navbar>
+    <navbar brand="信息科管理"></navbar>
     <router-view :moid="moid"></router-view>
   </App>
 </template>
@@ -9,6 +9,11 @@
   import App from './index'
   import Navbar from 'components/common/navbar'
   export default {
+    data() {
+      return {
+        moid: moid
+      }
+    },
     components: {
       App,
       Navbar

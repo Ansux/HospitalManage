@@ -3,7 +3,7 @@ require('es6-promise').polyfill()
 import axios from 'axios'
 import Qs from 'qs'
 
-const URL = 'http://localhost/website/data/post'
+const URL = apiUrl
 const isOnDev = (process.env.NODE_ENV === 'development')
 
 let axiosConfig = {}

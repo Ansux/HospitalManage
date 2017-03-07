@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import MedicalOrg from 'components/MedicalOrg/Index'
 import Device from 'components/Device/Index'
 import CallNumber from 'components/CallNumber/Index'
 import Package from 'components/Package/Index'
@@ -50,6 +51,12 @@ let Routes = routes.concat([
     component: CloudSetting
   }
 ])
+
+Routes.unshift({
+  path: '/',
+  name: 'MedicalOrg',
+  component: MedicalOrg
+})
 
 export default new Router({
   linkActiveClass: 'active',

@@ -1,6 +1,7 @@
 <template>
   <Container action="用户">
-    <table class="table table-bordered table-striped table-role">
+    <li class="action" slot="breadcrumb"><button @click="add" class="btn btn-xs btn-default">添加用户</button></li>
+    <table class="table table-bordered table-striped">
       <thead>
         <tr>
           <th width="10%">序号</th>
@@ -312,12 +313,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-  .table-role {
-    .is-edit td {
-      background-color: #2aaaf3;
-    }
-  }
-  
   .modal-user {
     .checkbox-inline {
       margin-left: 0;

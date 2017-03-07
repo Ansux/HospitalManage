@@ -1,6 +1,6 @@
 <template>
-  <Container action="医院资料">
-    <Loading :isFetching="isFetching"></Loading>
+  <Container action="医院资料" :isFetching="isFetching">
+    <li class="action" slot="breadcrumb"><button @click="add" class="btn btn-xs btn-default">添加科室</button></li>
     <table class="table table-bordered table-striped">
       <thead>
         <tr>
@@ -140,6 +140,7 @@
       moid: 'fetch'
     },
     created() {
+      if (this.moid.length === 0) return
       this.fetch()
     },
     computed: {
@@ -150,7 +151,6 @@
     },
     methods: {
       fetch() {
-        if (this.moid.length === 0) return
         this.isFetching = true
         api('getDeptByPage', {
           medicalOrgId: this.moid,
@@ -158,10 +158,10 @@
           pageSize: this.page.size,
           str_search: ''
         }).then((res) => {
+          this.isFetching = false
           let data = JSON.parse(res.data.Data)
           this.page.totalPage = data.TotalPage
           this.departmentList = JSON.parse(data.ResultList)
-          this.isFetching = false
         })
       },
       add() {

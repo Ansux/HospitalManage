@@ -1,5 +1,6 @@
 <template>
   <Container action="角色">
+    <li class="action" slot="breadcrumb"><button @click="add" class="btn btn-xs btn-default">添加角色</button></li>
     <table class="table table-bordered table-striped table-role">
       <thead>
         <tr>
@@ -83,6 +84,7 @@
     },
     data() {
       return {
+        isFetching: false,
         roleList: [],
         rightsList: [],
         page: {
@@ -98,8 +100,8 @@
       }
     },
     created() {
-      this.fetch()
       this.fetchRights()
+      if (this.moid.length > 0) this.fetch()
     },
     computed: {
       validator() {
@@ -113,11 +115,13 @@
     },
     methods: {
       fetch() {
+        this.isFetching = true
         api('getRoleByMidPage', {
           medicalOrgId: this.moid,
           userPageIndex: this.page.current,
           userPageSize: this.page.size
         }).then(res => {
+          this.isFetching = false
           res = JSON.parse(res.data.Data)
           this.totalPage = res.CountPage
           this.roleList = JSON.parse(res.RoleJSON)

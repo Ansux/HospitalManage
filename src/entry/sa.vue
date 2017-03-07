@@ -1,6 +1,6 @@
 <template>
   <App>
-    <navbar></navbar>
+    <Navbar></Navbar>
     <Side @changeMedicalOrgId="changeMedicalOrgId"></Side>
     <router-view :moid="moid"></router-view>
   </App>
@@ -13,7 +13,6 @@
   export default {
     data() {
       return {
-        uid: uid,
         moid: ''
       }
     },
@@ -33,8 +32,6 @@
 
 <style lang="scss">
   .view-wraper {
-    margin: 0 0 0 250px;
-    padding: 20px;
+    margin-left: 250px;
   }
-
 </style>

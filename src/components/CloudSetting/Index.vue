@@ -144,17 +144,5 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-  .category {
-    .breadcrumb {
-      padding: 12px 10px 12px 20px;
-      margin-bottom: 20px;
-      background: #fff;
-    }
-    .content-warper {
-      position: relative;
-      padding: 20px;
-      background-color: #fff;
-    }
-  }
 
 </style>
