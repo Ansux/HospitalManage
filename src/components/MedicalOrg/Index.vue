@@ -46,7 +46,7 @@
 </template>
 
 <script>
-  import api from 'src/api'
+  import {api} from 'src/api'
   import Container from 'components/common/container'
   import Alert from 'components/common/alert'
   export default {

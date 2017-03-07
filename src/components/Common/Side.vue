@@ -16,7 +16,7 @@
 <script>
   import Pager from 'components/common/pager'
   import Loading from 'components/common/loading'
-  import api from 'src/api'
+  import {api} from 'src/api'
   export default {
     components: {
       Pager,

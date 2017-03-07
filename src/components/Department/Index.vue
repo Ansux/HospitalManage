@@ -24,7 +24,7 @@
           <td>
             <button type="button" @click="right(item)" class="btn btn-xs btn-primary">分配权限</button>
             <button type="button" @click="update(item)" class="btn btn-xs btn-warning">更新</button>
-            <button type="button" @click="remove(item)" class="btn btn-xs btn-danger">删除</button>
+            <button type="button" @click="remove(item)" class="btn btn-xs btn-danger">禁用</button>
           </td>
         </tr>
       </tbody>
@@ -98,7 +98,7 @@
 </template>
 
 <script>
-  import api from 'src/api'
+  import {api} from 'src/api'
   import Container from 'components/common/container'
   import Pager from 'components/common/pager'
   import Confirm from 'components/common/confirm'

@@ -97,7 +97,7 @@
 </template>
 
 <script>
-  import api from 'src/api'
+  import {api} from 'src/api'
   import Container from 'components/common/container'
   import Pager from 'components/common/pager'
   import Confirm from 'components/common/confirm'

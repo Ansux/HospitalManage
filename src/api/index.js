@@ -3,7 +3,7 @@ require('es6-promise').polyfill()
 import axios from 'axios'
 import Qs from 'qs'
 
-const URL = apiUrl
+const API_URL = `${rootUrl}/data/post`
 const isOnDev = (process.env.NODE_ENV === 'development')
 
 let axiosConfig = {}
@@ -21,7 +21,7 @@ function qsParams(env, params) {
   return Qs.stringify(params)
 }
 
-const routes = {
+const apiRoutes = {
   // 资料
   getHosByPage: 'MedicalOrg.GetHosByPage',
   getMedicalOrgByOrgID: 'MedicalOrg.GetMedicalOrgByOrgID',
@@ -34,6 +34,7 @@ const routes = {
   modifyExamDep: 'Department.ModifyExamDep',
   getExamDeptByHosID: 'Department.GetExamDeptByHosID',
   getDepartmentRightById: 'DepartmentRight.GetDepartmentRightById',
+  modifyDepartmentRight: 'DepartmentRight.ModifyDepartmentRight',
   // 角色
   getUsersByPage: 'BackUser.GetUsersByPage',
   getRoleByMidPage: 'Roles.GetRoleByMidPage',
@@ -67,9 +68,14 @@ const routes = {
   getServiceType: 'Charge.GetServiceType'
 }
 
-export default (routeKey, params) => {
-  return axios.post(URL, qsParams(isOnDev, {
-    module: routes[routeKey],
+export const api = (routeKey, params) => {
+  return axios.post(API_URL, qsParams(isOnDev, {
+    module: apiRoutes[routeKey],
     data: JSON.stringify(params)
   }), axiosConfig)
+}
+
+export const post = (url, params) => {
+  url = `${rootUrl}/${url}`
+  return axios.post(url, qsParams(isOnDev, params), axiosConfig)
 }

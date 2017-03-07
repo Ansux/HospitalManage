@@ -6,22 +6,22 @@
         <div class="row form-horizontal">
           <div class="col-sm-4">
             <div class="form-group">
-              <label class="col-sm-4 control-label">医院编码</label>
+              <label class="col-sm-4 control-label">序列号</label>
               <div class="col-sm-8">
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" value="请使用工具获取识别码" readonly>
               </div>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="form-group">
-              <label class="col-sm-3 control-label">医院编码</label>
+              <label class="col-sm-3 control-label">注册码</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" v-model="registerCode">
               </div>
             </div>
           </div>
           <div class="col-sm-2">
-            <button class="btn btn-success">注册</button>
+            <button class="btn btn-success" :disabled="registerCode===''" @click="register">注册</button>
           </div>
         </div>
       </div>
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-  import api from 'src/api'
+  import {api, post} from 'src/api'
   import Container from 'components/common/container'
   import Confirm from 'components/common/confirm'
   export default {
@@ -85,6 +85,7 @@
             UserList: []
           }
         ],
+        registerCode: '',
         form: {
           title: '权限管理'
         },
@@ -122,6 +123,9 @@
             }
           })
         })
+        post('Login/GetRegisterCode', {MedicalOrgID: this.moid}).then(res => {
+          this.registerCode = res.data
+        })
       },
       deleteUser(userId, roleId, rIndex, uIndex) {
         let _this = this
@@ -139,6 +143,11 @@
             })
           }
         }
+      },
+      register() {
+        post('Login/ClickRegisterCode', {MedicalOrgID: this.moid, RegisterCode: this.registerCode}).then(res => {
+          alert(res.data)
+        })
       }
     },
     watch: {

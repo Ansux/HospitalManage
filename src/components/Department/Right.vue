@@ -18,7 +18,13 @@
               </div>
             </div>
             <div class="panel panel-default">
-              <div class="panel-heading">科室分配<span v-if="currentRightName">【{{currentRightName}}】</span></div>
+              <div class="panel-heading">
+                <span>科室分配</span>
+                <span v-if="currentRightName">【{{currentRightName}}】</span>
+                <label class="checkbox-inline checked-all" @click="checkAll">
+                  <input type="checkbox" v-model="checkAllFlag" :disabled="!currentRightName"> 全选
+                </label>
+              </div>
               <div class="panel-body">
                 <label class="checkbox-inline" v-for="item in departList">
                   <input type="checkbox" :value="item.Row" v-model="departs" @change="departChange"> {{item.DepartName}}
@@ -39,7 +45,9 @@
 </template>
 
 <script>
-  import api from 'src/api'
+  import {
+    api
+  } from 'src/api'
   export default {
     props: ['rightInfo'],
     data() {
@@ -51,7 +59,8 @@
         departs: [],
         rightIndex: null,
         rights: [],
-        currentRightName: null
+        currentRightName: null,
+        checkAllFlag: false
       }
     },
     computed: {
@@ -108,6 +117,7 @@
         })
       },
       selectDepart(item) {
+        this.checkAllFlag = false
         this.currentRightName = item.RIGHTNAME
         this.departs = []
         this.rights.forEach((v, k) => {
@@ -145,6 +155,20 @@
       },
       close() {
         this.rightInfo.show = false
+      },
+      checkAll() {
+        if (!this.currentRightName) return
+        this.checkAllFlag = !this.checkAllFlag
+        if (this.checkAllFlag) {
+          let tempArr = []
+          this.departList.forEach(v => {
+            tempArr.push(v.Row)
+          })
+          this.departs = tempArr
+        } else {
+          this.departs = []
+        }
+        this.departChange()
       }
     },
     watch: {
@@ -159,6 +183,10 @@
     .checkbox-inline {
       margin-left: 0px;
       margin-right: 20px;
+      &.checked-all {
+        padding-top: 0;
+        margin-left: 30px;
+      }
       label {
         font-weight: normal;
       }
