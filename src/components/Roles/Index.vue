@@ -1,6 +1,9 @@
 <template>
-  <Container action="角色">
-    <li class="action" slot="breadcrumb"><button @click="add" class="btn btn-xs btn-default">添加角色</button></li>
+  <v-container action="角色">
+    <template slot="breadcrumb">
+      <li class="action"><button @click="add" class="btn btn-xs btn-default">添加角色</button></li>
+    </template>
+    <!--列表-->
     <table class="table table-bordered table-striped table-role">
       <thead>
         <tr>
@@ -23,84 +26,49 @@
         </tr>
       </tbody>
     </table>
-    <pager :page="page" @fetch="fetch"></pager>
-    <div class="modal fade modal-roles" id="modal_roles" tabindex="-1" role="dialog" data-backdrop="static">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">{{modal.title}}</h4>
-          </div>
-          <form action="" class="form-horizontal">
-            <div class="modal-body">
-              <div class="form-group">
-                <label for="" class="col-sm-3 control-label">角色名称</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" v-model="form.RoleName">
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="" class="col-sm-3 control-label">是否启用</label>
-                <div class="col-sm-9">
-                  <label class="radio-inline">
-                      <input type="radio" name="inlineRadioOptions" v-model="form.IsValid" value="true"> 是
-                    </label>
-                  <label class="radio-inline">
-                      <input type="radio" name="inlineRadioOptions" v-model="form.IsValid" value="false"> 否
-                    </label>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="" class="col-sm-3 control-label">角色权限</label>
-                <div class="col-sm-9">
-                  <label class="checkbox-inline" v-for="item in rightsList" :class="{'checked': item.isChecked}">
-                      <input type="checkbox" :checked="item.isChecked" @change="item.isChecked=!item.isChecked"> {{item.RIGHTNAME}}
-                    </label>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-              <button type="button" :disabled="validator" class="btn btn-primary" @click="save">提 交</button>
-            </div>
-          </form>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-  </Container>
+    <!-- 分页 -->
+    <v-pager :page="page" @fetch="fetch"></v-pager>
+    <!--添加、更新子模块-->
+    <v-module-form :data="modal" ref="modal" @saveOk="saveOk" v-if="modal.render"></v-module-form>
+    <!--提示框-->
+    <v-alert :alert="alert"></v-alert>
+  </v-container>
 </template>
 
 <script>
   import Container from 'components/common/container'
   import Pager from 'components/common/pager'
-  import {api} from 'src/api'
+  import Alert from 'components/common/alert'
+  import Form from './form'
+  import {
+    api
+  } from 'src/api'
   export default {
     props: ['moid'],
     components: {
-      Container,
-      Pager
+      'v-container': Container,
+      'v-pager': Pager,
+      'v-alert': Alert,
+      'v-module-form': Form
     },
     data() {
       return {
         isFetching: false,
         roleList: [],
-        rightsList: [],
         page: {
           current: 1,
           size: 5,
           totalPage: 1
         },
         modal: {
-          title: '',
-          type: ''
+          render: false,
+          type: '',
+          form: {}
         },
-        form: {}
+        alert: {}
       }
     },
     created() {
-      this.fetchRights()
       if (this.moid.length > 0) this.fetch()
     },
     computed: {
@@ -127,84 +95,44 @@
           this.roleList = JSON.parse(res.RoleJSON)
         })
       },
-      fetchRights() {
-        api('getRights', {
-          '1': '1'
-        }).then(res => {
-          res = JSON.parse(res.data.Data)
-          res.forEach(v => {
-            v.isChecked = false
-          })
-          this.rightsList = res
-        })
-      },
       add() {
         this.modal = {
-          title: '添加角色',
-          type: 'add'
+          render: true,
+          type: 'add',
+          form: {
+            moid: this.moid,
+            IsValid: true,
+            RoleName: null
+          }
         }
-        this.form = {
-          IsValid: true,
-          RoleName: null
-        }
-        this.rightsList.forEach(right => {
-          right.isChecked = false
+        this.$nextTick(() => {
+          this.$refs.modal.open()
         })
-        $('#modal_roles').modal()
       },
       update(item) {
         this.modal = {
-          title: `【更新角色】${item.RoleName}`,
-          type: 'update'
+          render: true,
+          type: 'update',
+          form: {
+            moid: this.moid,
+            IsValid: item.IsValid,
+            MedicalOrgId: item.MedicalOrgId,
+            RightId: item.RightId,
+            RoleId: item.RoleId,
+            RoleName: item.RoleName
+          }
         }
-        this.form = {
-          IsValid: item.IsValid,
-          MedicalOrgId: item.MedicalOrgId,
-          RightId: item.RightId,
-          RoleId: item.RoleId,
-          RoleName: item.RoleName
-        }
-        let rights = item.RightId.split(',')
-        this.rightsList.forEach(right => {
-          right.isChecked = false
-          rights.forEach(v => {
-            if (v === right.RIGHTID) right.isChecked = true
-          })
+        this.$nextTick(() => {
+          this.$refs.modal.open()
         })
-        $('#modal_roles').modal()
       },
-      save() {
-        let rights = []
-        this.rightsList.forEach(v => {
-          if (v.isChecked) rights.push(v.RIGHTID)
-        })
-
-        let form = this.form
-        let postForm = {
-          isvalid: Number(form.IsValid),
-          mid: this.moid,
-          rightID: rights,
-          rolename: form.RoleName
+      saveOk(msg) {
+        this.alert = {
+          show: true,
+          text: msg,
+          timer: 2000
         }
-        if (this.modal.type === 'add') {
-          api('addRoles', postForm).then(res => {
-            if (!res.data.Status) return
-            this.fetch()
-          })
-        } else {
-          postForm.roleid = form.RoleId
-          api('modifyRole', postForm).then(res => {
-            if (!res.data.Status) return
-            this.roleList.forEach(v => {
-              if (v.RoleId === form.RoleId) {
-                v.IsValid = form.IsValid
-                v.RoleName = form.RoleName
-                v.RightId = rights.join(',')
-              }
-            })
-          })
-        }
-        $('#modal_roles').modal('hide')
+        this.fetch()
       }
     },
     watch: {

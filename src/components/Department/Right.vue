@@ -1,58 +1,49 @@
 <template>
-  <div class="modal fade" id="modal_right" tabindex="-1" role="dialog" data-backdrop="static">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">权限管理【{{form.DepartName}}】</h4>
+  <v-modal size="lg" :title="title" ref="modal" @save="save">
+    <template slot="modal-body">
+      <form class="form-horizontal form-right">
+        <div class="modal-body">
+          <div class="panel panel-default">
+            <div class="panel-heading">权限分配</div>
+            <div class="panel-body">
+              <span class="checkbox-inline" v-for="item in rightList">
+                <input type="checkbox" :value="item.RIGHTID" v-model="form.rightIds">
+                <label @click="selectDepart(item)">{{item.RIGHTNAME}}</label>
+              </span>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <span>科室分配</span>
+              <span v-if="currentRightName">【{{currentRightName}}】</span>
+              <label class="checkbox-inline checked-all" @click="checkAll">
+                <input type="checkbox" v-model="checkAllFlag" :disabled="!currentRightName"> 全选
+              </label>
+            </div>
+            <div class="panel-body">
+              <label class="checkbox-inline" v-for="item in departList">
+                <input type="checkbox" :value="item.Row" v-model="departs" @change="departChange"> {{item.DepartName}}
+              </label>
+            </div>
+          </div>
         </div>
-        <form action="" class="form-horizontal">
-          <div class="modal-body">
-            <div class="panel panel-default">
-              <div class="panel-heading">权限分配</div>
-              <div class="panel-body">
-                <span class="checkbox-inline" v-for="item in rightList">
-                  <input type="checkbox" :value="item.RIGHTID" v-model="form.rightIds">
-                  <label @click="selectDepart(item)">{{item.RIGHTNAME}}</label>
-                </span>
-              </div>
-            </div>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <span>科室分配</span>
-                <span v-if="currentRightName">【{{currentRightName}}】</span>
-                <label class="checkbox-inline checked-all" @click="checkAll">
-                  <input type="checkbox" v-model="checkAllFlag" :disabled="!currentRightName"> 全选
-                </label>
-              </div>
-              <div class="panel-body">
-                <label class="checkbox-inline" v-for="item in departList">
-                  <input type="checkbox" :value="item.Row" v-model="departs" @change="departChange"> {{item.DepartName}}
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" @click="close">关闭</button>
-            <button type="button" :disabled="validator" class="btn btn-primary" @click="save">提 交</button>
-          </div>
-        </form>
-      </div>
-      <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-  </div>
+      </form>
+    </template>
+  </v-modal>
 </template>
 
 <script>
   import {
     api
   } from 'src/api'
+  import Modal from 'components/common/modal'
   export default {
-    props: ['rightInfo'],
+    props: ['data'],
+    components: {
+      'v-modal': Modal
+    },
     data() {
       return {
-        modal: {},
         rightList: [],
         departList: [],
         form: {},
@@ -66,14 +57,28 @@
     computed: {
       validator() {
         return false
+      },
+      title() {
+        return `权限管理【${this.data.DepartName}】`
       }
     },
     created() {
-      this.fetch(this.rightInfo)
       this.fetchMore()
     },
     methods: {
-      fetch(depart) {
+      indexOf(arr, key, val) {
+        let index = -1
+        arr.forEach((v, k) => {
+          if (v[key] === val) index = k
+        })
+        return index
+      },
+      open() {
+        this.fetch()
+        return this.$refs.modal.open()
+      },
+      fetch() {
+        let depart = this.data
         api('getDepartmentRightById', {
           departmentid: depart.DepartId,
           hospitalId: depart.moid
@@ -111,7 +116,7 @@
           this.rightList = JSON.parse(res.data.Data)
         })
         api('getExamDeptByHosID', {
-          MedicalOrgID: this.rightInfo.moid
+          MedicalOrgID: this.data.moid
         }).then(res => {
           this.departList = JSON.parse(res.data.Data)
         })
@@ -119,6 +124,13 @@
       selectDepart(item) {
         this.checkAllFlag = false
         this.currentRightName = item.RIGHTNAME
+        let index = this.indexOf(this.rights, 'rightId', item.RIGHTID)
+        if (index === -1) {
+          this.rights.push({
+            rightId: item.RIGHTID,
+            departIds: []
+          })
+        }
         this.departs = []
         this.rights.forEach((v, k) => {
           if (v.rightId === item.RIGHTID) {
@@ -126,35 +138,6 @@
             this.rightIndex = k
           }
         })
-      },
-      departChange() {
-        this.rights[this.rightIndex].departIds = this.departs
-      },
-      save() {
-        let form = {
-          hospitalId: this.rightInfo.moid,
-          departmentid: this.rightInfo.DepartId,
-          data: ''
-        }
-        let tempArr = []
-        this.rights.forEach(v => {
-          tempArr.push(JSON.stringify({
-            right_id: v.rightId,
-            Chliddeparts_id: v.departIds.join(',')
-          }))
-        })
-        form.data = tempArr.join('@')
-
-        api('modifyDepartmentRight', form).then(res => {
-          if (!res.data.Status) return
-          alert('更新成功。')
-        })
-      },
-      show() {
-        this.fetch(this.rightInfo)
-      },
-      close() {
-        this.rightInfo.show = false
       },
       checkAll() {
         if (!this.currentRightName) return
@@ -169,17 +152,37 @@
           this.departs = []
         }
         this.departChange()
+      },
+      departChange() {
+        this.rights[this.rightIndex].departIds = this.departs
+      },
+      save() {
+        let form = {
+          hospitalId: this.data.moid,
+          departmentid: this.data.DepartId,
+          data: ''
+        }
+        let tempArr = []
+        this.rights.forEach(v => {
+          tempArr.push(JSON.stringify({
+            right_id: v.rightId,
+            Chliddeparts_id: v.departIds.join(',')
+          }))
+        })
+        form.data = tempArr.join('@')
+
+        api('modifyDepartmentRight', form).then(res => {
+          if (!res.data.Status) return
+          this.$refs.modal.close()
+        })
       }
-    },
-    watch: {
-      'rightInfo.show': 'show'
     }
   }
 
 </script>
 
-<style lang="scss">
-  #modal_right {
+<style lang="scss" scoped>
+  .form-right {
     .checkbox-inline {
       margin-left: 0px;
       margin-right: 20px;

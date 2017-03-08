@@ -1,6 +1,6 @@
 <template>
   <div class="modal fade" :id="id" tabindex="-1" data-backdrop="static">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" :class="[sizeClass]" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" @click="close"><span aria-hidden="true">&times;</span></button>
@@ -29,6 +29,12 @@
       validator: {
         type: Boolean,
         default: false
+      },
+      size: String
+    },
+    computed: {
+      sizeClass() {
+        return 'modal-' + this.size
       }
     },
     methods: {

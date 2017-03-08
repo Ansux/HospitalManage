@@ -1,5 +1,5 @@
 <template>
-  <v-modal @save="save" :title="title" ref="modal">
+  <v-modal :title="title" @save="save" ref="modal">
     <template slot="modal-body">
       <form class="form-horizontal">
         <div class="modal-body">

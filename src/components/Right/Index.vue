@@ -1,5 +1,5 @@
 <template>
-  <Container action="权限">
+  <v-container action="权限">
     <div class="panel panel-default">
       <div class="panel-heading">注册</div>
       <div class="panel-body">
@@ -43,8 +43,8 @@
         </tr>
       </tbody>
     </table>
-    <Confirm :cf="cf"></Confirm>
-  </Container>
+    <v-confirm :cf="cf"></v-confirm>
+  </v-container>
 </template>
 
 <script>
@@ -61,8 +61,8 @@
       }
     },
     components: {
-      Container,
-      Confirm
+      'v-container': Container,
+      'v-confirm': Confirm
     },
     data() {
       return {

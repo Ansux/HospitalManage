@@ -26,7 +26,6 @@
           <td>
             <button type="button" @click="right(item)" class="btn btn-xs btn-primary">分配权限</button>
             <button type="button" @click="update(item)" class="btn btn-xs btn-warning">更新</button>
-            <button type="button" @click="remove(item)" class="btn btn-xs btn-danger">禁用</button>
           </td>
         </tr>
       </tbody>
@@ -36,7 +35,7 @@
     <!-- 添加、更新子模块 -->
     <v-module-form :data="modal" ref="modal" @saveOk="saveOk" v-if="modal.render"></v-module-form>
     <!-- 权限子模块 -->
-    <v-module-right :rightInfo="rightInfo" :moid="moid" v-if="rightInfo.render"></v-module-right>
+    <v-module-right :data="rightInfo" ref="right" v-if="rightInfo.render"></v-module-right>
     <!-- 确认框（用于启用/禁用操作） -->
     <v-confirm :cf="cf"></v-confirm>
     <!-- 提示框 -->
@@ -157,22 +156,22 @@
         }
         this.fetch()
       },
-      remove(item) {
-        this.cf = {
-          show: true,
-          text: `确定要禁用【${item.DepartId}】么？`,
-          ok: () => {
-            api('deleteExamDep', {
-              DepartId: item.DepartId,
-              MedicalOrgId: this.moid
-            }).then(res => {
-              if (!res.data.Status) return
-              item.IsValid = false
-              this.cf.show = false
-            })
-          }
-        }
-      },
+      // remove(item) {
+      //   this.cf = {
+      //     show: true,
+      //     text: `确定要禁用【${item.DepartId}】么？`,
+      //     ok: () => {
+      //       api('deleteExamDep', {
+      //         DepartId: item.DepartId,
+      //         MedicalOrgId: this.moid
+      //       }).then(res => {
+      //         if (!res.data.Status) return
+      //         item.IsValid = false
+      //         this.cf.show = false
+      //       })
+      //     }
+      //   }
+      // },
       right(item) {
         this.rightInfo = {
           render: true,
@@ -181,7 +180,7 @@
           DepartName: item.DepartName
         }
         this.$nextTick(() => {
-          $('#modal_right').modal()
+          this.$refs.right.open()
         })
       }
     }
