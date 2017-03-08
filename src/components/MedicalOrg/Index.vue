@@ -1,5 +1,5 @@
 <template>
-  <Container action="医院资料" :isFetching="isFetching">
+  <v-container action="医院资料" :isFetching="isFetching">
     <!-- 内容区 -->
     <div class="panel panel-default">
       <div class="panel-heading">更新资料</div>
@@ -43,8 +43,8 @@
       </div>
     </div>
     <!-- 警告框 -->
-    <Alert :alert="alert"></Alert>
-  </Container>
+    <v-alert :alert="alert"></v-alert>
+  </v-container>
 </template>
 
 <script>
@@ -58,8 +58,8 @@
       }
     },
     components: {
-      Alert,
-      Container
+      'v-alert': Alert,
+      'v-container': Container
     },
     data() {
       return {

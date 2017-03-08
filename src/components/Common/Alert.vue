@@ -1,5 +1,5 @@
 <template>
-  <div class="warp-alert" v-show="alert.show">
+  <div class="warper-alert" v-show="alert.show">
     <div class="alert">
       <div class="title"><span class="text">提示：</span><span class="btn-close" @click="close()">&times;</span></div>
       <div class="content">{{alert.text}}</div>
@@ -37,13 +37,13 @@
 </script>
 
 <style lang="scss">
-  .warp-alert {
+  .warper-alert {
     position: fixed;
     top: 0px;
     right: 0px;
     bottom: 0px;
     left: 0px;
-    background-color: rgba(0, 0, 0, .1);
+    background-color: rgba(0, 0, 0, .3);
     z-index: 9999;
     .alert {
       position: fixed;

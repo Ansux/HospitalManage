@@ -1,5 +1,5 @@
 <template>
-  <Container action="医院资料" :isFetching="isFetching">
+  <v-container action="医院资料" :isFetching="isFetching">
     <!-- 面包屑 -->
     <li class="action" slot="breadcrumb"><button @click="add" class="btn btn-xs btn-default">添加科室</button></li>
     <!-- 列表 -->
@@ -32,85 +32,28 @@
       </tbody>
     </table>
     <!-- 分页 -->
-    <pager :page="page" @fetch="fetch"></pager>
-    <!-- 确认框（用于启用/禁用操作） -->
-    <confirm :cf="cf"></confirm>
-    <!-- 提示框 -->
-    <alert :alert="alert"></alert>
+    <v-pager :page="page" @fetch="fetch"></v-pager>
     <!-- 添加、更新子模块 -->
-    <div class="modal fade" id="modal_depart" tabindex="-1" role="dialog" data-backdrop="static">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">{{modal.title}}</h4>
-          </div>
-          <form action="" class="form-horizontal">
-            <div class="modal-body">
-              <div class="form-group">
-                <label class="control-label col-sm-3">科室代码</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" v-model="form.DepartId" :disabled="modal.type==='update'">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-sm-3">科室名称</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" v-model="form.DepartName">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-sm-3">英文名称</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" v-model="form.AnotherName">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-sm-3">是否启用</label>
-                <div class="col-sm-9">
-                  <label class="radio-inline">
-                      <input type="radio" value="true" v-model="form.IsValid"> 是
-                    </label>
-                  <label class="radio-inline">
-                      <input type="radio" value="false" v-model="form.IsValid"> 否
-                    </label>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-sm-3">可否检查</label>
-                <div class="col-sm-9">
-                  <label class="radio-inline">
-                      <input type="radio" value="true" v-model="form.IsSampleDep"> 是
-                    </label>
-                  <label class="radio-inline">
-                      <input type="radio" value="false" v-model="form.IsSampleDep"> 否
-                    </label>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-              <button type="button" :disabled="validator" class="btn btn-primary" @click="save">提 交</button>
-            </div>
-          </form>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
+    <v-module-form :data="modal" ref="modal" @saveOk="saveOk" v-if="modal.render"></v-module-form>
     <!-- 权限子模块 -->
-    <Right :rightInfo="rightInfo" :moid="moid" v-if="rightInfo.show"></Right>
-    <!-- /.modal -->
-  </Container>
+    <v-module-right :rightInfo="rightInfo" :moid="moid" v-if="rightInfo.render"></v-module-right>
+    <!-- 确认框（用于启用/禁用操作） -->
+    <v-confirm :cf="cf"></v-confirm>
+    <!-- 提示框 -->
+    <v-alert :alert="alert"></v-alert>
+  </v-container>
 </template>
 
 <script>
-  import {api} from 'src/api'
+  import {
+    api
+  } from 'src/api'
   import Container from 'components/common/container'
   import Pager from 'components/common/pager'
   import Confirm from 'components/common/confirm'
   import Alert from 'components/common/alert'
   import Right from './right'
+  import Form from './form'
   export default {
     props: {
       moid: {
@@ -118,11 +61,12 @@
       }
     },
     components: {
-      Container,
-      Pager,
-      Alert,
-      Confirm,
-      Right
+      'v-container': Container,
+      'v-pager': Pager,
+      'v-alert': Alert,
+      'v-confirm': Confirm,
+      'v-module-form': Form,
+      'v-module-right': Right
     },
     data() {
       return {
@@ -134,10 +78,10 @@
           totalPage: 1
         },
         modal: {
-          title: '',
-          type: ''
+          render: false,
+          type: '',
+          form: {}
         },
-        form: {},
         alert: {},
         cf: {},
         rightInfo: {}
@@ -172,23 +116,51 @@
         })
       },
       add() {
-        this.modal.title = '添加科室'
-        this.modal.type = 'add'
-        this.form = {
-          DepartId: '',
-          MedicalOrgId: this.moid,
-          DepartName: '',
-          AnotherName: '',
-          IsValid: true,
-          IsSampleDep: false
+        this.modal = {
+          render: true,
+          type: 'add',
+          form: {
+            DepartId: '',
+            MedicalOrgId: this.moid,
+            DepartName: '',
+            AnotherName: '',
+            IsValid: true,
+            IsSampleDep: false
+          }
         }
-        $('#modal_depart').modal()
+        this.$nextTick(() => {
+          this.$refs.modal.open()
+        })
+      },
+      update(item) {
+        this.modal = {
+          render: true,
+          type: 'update',
+          form: {
+            DepartName: item.DepartName,
+            AnotherName: item.AnotherName,
+            MedicalOrgId: this.moid,
+            IsValid: item.IsValid,
+            IsSampleDep: item.IsSampleDep,
+            DepartId: item.DepartId
+          }
+        }
+        this.$nextTick(() => {
+          this.$refs.modal.open()
+        })
+      },
+      saveOk(msg) {
+        this.alert = {
+          show: true,
+          text: msg,
+          timer: 2000
+        }
+        this.fetch()
       },
       remove(item) {
-        console.log(item)
         this.cf = {
           show: true,
-          text: `确定要删除【${item.DepartId}】此条目么？`,
+          text: `确定要禁用【${item.DepartId}】么？`,
           ok: () => {
             api('deleteExamDep', {
               DepartId: item.DepartId,
@@ -201,55 +173,9 @@
           }
         }
       },
-      update(item) {
-        this.modal.title = `【更新科室】${item.DepartName}`
-        this.modal.type = 'update'
-        this.form = {
-          DepartName: item.DepartName,
-          AnotherName: item.AnotherName,
-          MedicalOrgId: this.moid,
-          IsValid: item.IsValid,
-          IsSampleDep: item.IsSampleDep,
-          DepartId: item.DepartId
-        }
-        $('#modal_depart').modal()
-      },
-      save() {
-        let form = this.form
-        if (this.modal.type === 'update') {
-          api('modifyExamDep', form).then(res => {
-            if (!res.data.Status) return
-            this.alert = {
-              show: true,
-              text: '更新成功！',
-              timer: 2000
-            }
-            this.departmentList.forEach(function (v, k) {
-              if (v.DepartId === form.DepartId) {
-                v.DepartName = form.DepartName
-                v.AnotherName = form.AnotherName
-                v.IsValid = form.IsValid
-                v.IsSampleDep = form.IsSampleDep
-                return
-              }
-            })
-          })
-        } else if (this.modal.type === 'add') {
-          api('addExamDep', form).then(res => {
-            if (!res.data.Status) return
-            this.alert = {
-              show: true,
-              text: '添加成功！',
-              timer: 2000
-            }
-            this.fetch()
-          })
-        }
-        $('#modal_depart').modal('hide')
-      },
       right(item) {
         this.rightInfo = {
-          show: true,
+          render: true,
           moid: this.moid,
           DepartId: item.DepartId,
           DepartName: item.DepartName
