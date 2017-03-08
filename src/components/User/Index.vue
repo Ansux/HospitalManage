@@ -1,6 +1,9 @@
 <template>
-  <Container action="用户">
-    <li class="action" slot="breadcrumb"><button @click="add" class="btn btn-xs btn-default">添加用户</button></li>
+  <v-container action="用户">
+    <template slot="breadcrumb">
+      <li class="action"><button @click="add" class="btn btn-xs btn-default">添加用户</button></li>
+    </template>
+    <!--列表-->
     <table class="table table-bordered table-striped">
       <thead>
         <tr>
@@ -26,144 +29,23 @@
         </tr>
       </tbody>
     </table>
-    <pager :page="page" @fetch="fetch"></pager>
-    <div class="modal fade modal-user" id="modal_user" tabindex="-1" role="dialog" data-backdrop="static">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">{{modal.title}}</h4>
-          </div>
-          <form action="" class="form-horizontal">
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="" class="col-sm-3 control-label">用户工号</label>
-                    <div class="col-sm-9">
-                      <input type="text" class="form-control" v-model="form.UserId" :disabled="modal.type==='update'">
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="" class="col-sm-3 control-label">登录名称</label>
-                    <div class="col-sm-9">
-                      <input type="text" class="form-control" v-model="form.UserName">
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="" class="col-sm-3 control-label">真实姓名</label>
-                    <div class="col-sm-9">
-                      <input type="text" class="form-control" v-model="form.RealName">
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="" class="col-sm-3 control-label">所属科室</label>
-                    <div class="col-sm-9">
-                      <select class="form-control" v-model="form.Departmentid">
-                          <option v-for="item in departmentList" :value="item.DepartId">{{item.DepartName}}</option>
-                        </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group role-group">
-                    <label for="" class="col-sm-3 control-label">所属角色</label>
-                    <div class="col-sm-9">
-                      <label class="checkbox-inline" v-for="item in roleList">
-                          <input type="checkbox" :value="item.ROLEID" v-model="form.RoleId"> {{item.ROLENAME}}
-                        </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="" class="col-sm-3 control-label">职位名称</label>
-                    <div class="col-sm-9">
-                      <input type="text" class="form-control" v-model="form.Position">
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="" class="col-sm-3 control-label">最高学历</label>
-                    <div class="col-sm-9">
-                      <input type="text" class="form-control" v-model="form.Qualification">
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="" class="col-sm-3 control-label">固定电话</label>
-                    <div class="col-sm-9">
-                      <input type="text" class="form-control" v-model="form.Call">
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="" class="col-sm-3 control-label">移动电话</label>
-                    <div class="col-sm-9">
-                      <input type="text" class="form-control" v-model="form.HandPhone">
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="" class="col-sm-3 control-label">常用邮箱</label>
-                    <div class="col-sm-9">
-                      <input type="email" class="form-control" v-model="form.Email">
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="" class="col-sm-3 control-label">是否启用</label>
-                    <div class="col-sm-9">
-                      <label class="radio-inline">
-                          <input type="radio" name="inlineRadioOptions" v-model="form.IsValid" value="true"> 是
-                        </label>
-                      <label class="radio-inline">
-                          <input type="radio" name="inlineRadioOptions" v-model="form.IsValid" value="false"> 否
-                        </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-              <button type="button" :disabled="validator" class="btn btn-primary" @click="save">提 交</button>
-            </div>
-          </form>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <Confirm :cf="cf"></Confirm>
-  </Container>
+    <!--分页-->
+    <v-pager :page="page" @fetch="fetch"></v-pager>
+    <!--添加、更新子模块-->
+    <v-module-form :data="modal" ref="modal" @saveOk="saveOk" v-if="modal.render"></v-module-form>
+    <!--确认提示框-->
+    <v-confirm :cf="cf"></v-confirm>
+    <!--提示框-->
+    <v-alert :alert="alert"></v-alert>
+  </v-container>
 </template>
 
 <script>
   import Container from 'components/common/container'
   import Confirm from 'components/common/confirm'
+  import Alert from 'components/common/alert'
   import Pager from 'components/common/pager'
+  import Form from './form'
   import {
     api
   } from 'src/api'
@@ -174,9 +56,11 @@
       }
     },
     components: {
-      Container,
-      Confirm,
-      Pager
+      'v-container': Container,
+      'v-module-form': Form,
+      'v-confirm': Confirm,
+      'v-alert': Alert,
+      'v-pager': Pager
     },
     data() {
       return {
@@ -189,16 +73,16 @@
           totalPage: 1
         },
         modal: {
-          title: '',
-          type: null
+          render: false,
+          type: null,
+          form: {}
         },
-        form: {},
-        cf: {}
+        cf: {},
+        alert: {}
       }
     },
     created() {
       this.fetch()
-      this.fetchMore()
     },
     computed: {
       validator() {
@@ -224,90 +108,78 @@
           this.userList = JSON.parse(res.ResultList)
         })
       },
-      fetchMore() {
-        if (this.moid.length === 0) return
-        api('getRolesByMedicalOrgID', {
-          medicalOrgId: this.moid
-        }).then(res => {
-          this.roleList = JSON.parse(res.data.Data)
-        })
-        api('getExamDeptByHosID', {
-          MedicalOrgID: this.moid
-        }).then(res => {
-          this.departmentList = JSON.parse(res.data.Data)
-        })
-      },
-      resetForm() {
-        this.form = {
-          UserId: null,
-          UserName: null,
-          IsValid: true,
-          Departmentid: null,
-          RealName: '',
-          RoleId: [],
-          Position: '',
-          Qualification: '',
-          Call: '',
-          HandPhone: '',
-          Email: '',
-          MedicalOrgId: this.moid,
-          Password: ''
-        }
-      },
       add() {
-        this.modal.title = '添加用户'
-        this.modal.type = 'add'
-        this.resetForm()
-        this.form.Departmentid = this.departmentList[0].Departmentid
-        $('#modal_user').modal()
+        this.modal = {
+          render: true,
+          type: 'add',
+          moid: this.moid,
+          form: {
+            UserId: null,
+            UserName: null,
+            IsValid: true,
+            Departmentid: null,
+            RealName: '',
+            RoleId: [],
+            Position: '',
+            Qualification: '',
+            Call: '',
+            HandPhone: '',
+            Email: '',
+            Password: ''
+          }
+        }
+        this.$nextTick(() => {
+          this.$refs.modal.open()
+        })
       },
       update(item) {
-        this.modal.title = `【更新角色】${item.UserName}`
-        this.modal.type = 'update'
-        this.resetForm()
-        this.form.UserId = item.UserID
-        this.form.UserName = item.UserName
-        this.form.IsValid = item.IsValid
+        let form = {
+          UserId: item.UserID,
+          UserName: item.UserName,
+          IsValid: item.IsValid
+        }
+        // 用户资料
         api('usersInfo', {
           'Userid': item.UserID
         }).then(res => {
           res = JSON.parse(res.data.Data)[0]
-          this.form.Departmentid = res.DEPARTMENTID
-          this.form.RealName = res.REALNAME
-          this.form.Call = res.CALL
-          this.form.HandPhone = res.HANDPHONE
-          this.form.Position = res.POSITION
-          this.form.Qualification = res.QUALIFICATION
-          this.form.Email = res.EMAIL
-        })
-        api('getRoleIdByUserId', {
-          Userid: item.UserID
-        }).then(res => {
-          let roles = JSON.parse(res.data.Data)
-          let tempArr = []
-          roles.forEach(v => {
-            tempArr.push(v.ROLEID)
+          form.Departmentid = res.DEPARTMENTID
+          form.RealName = res.REALNAME
+          form.Call = res.CALL
+          form.HandPhone = res.HANDPHONE
+          form.Position = res.POSITION
+          form.Qualification = res.QUALIFICATION
+          form.Email = res.EMAIL
+          // 用户角色
+          api('getRoleIdByUserId', {
+            Userid: item.UserID
+          }).then(res => {
+            let roles = JSON.parse(res.data.Data)
+            let tempArr = []
+            roles.forEach(v => {
+              tempArr.push(v.ROLEID)
+            })
+            form.RoleId = tempArr
+            // 弹窗
+            this.modal = {
+              render: true,
+              type: 'update',
+              moid: this.moid,
+              form: form
+            }
+            this.$nextTick(() => {
+              this.$refs.modal.open()
+            })
           })
-          this.form.RoleId = tempArr
         })
-        $('#modal_user').modal()
       },
-      save() {
-        let form = this.form
-        form.RoleId = form.RoleId.join(',')
-
-        let postModule = ''
-        if (this.modal.type === 'add') {
-          postModule = 'addUsers'
-        } else {
-          postModule = 'modifyUsers'
+      saveOk(msg) {
+        this.alert = {
+          show: true,
+          text: msg,
+          timer: 2000
         }
-
-        api(postModule, form).then(res => {
-          $('#modal_user').modal('hide')
-          if (!res.data.Status) return
-          this.fetch()
-        })
+        this.fetch()
       },
       resetPassword(user) {
         this.cf = {
@@ -326,7 +198,7 @@
       }
     },
     watch: {
-      moid: ['fetch', 'fetchMore']
+      moid: ['fetch']
     }
   }
 
@@ -334,19 +206,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-  .modal-user {
-    .checkbox-inline {
-      margin-left: 0;
-      margin-right: 10px;
-    }
-    .role-group {
-      .col-sm-3 {
-        width: 12.5%;
-      }
-      .col-sm-9 {
-        width: 87.5%;
-      }
-    }
-  }
+
 
 </style>

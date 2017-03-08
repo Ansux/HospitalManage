@@ -13,10 +13,10 @@
             <label for="" class="col-sm-3 control-label">是否启用</label>
             <div class="col-sm-9">
               <label class="radio-inline">
-                <input type="radio" name="inlineRadioOptions" v-model="form.IsValid" value="true"> 是
+                <input type="radio" name="inlineRadioOptions" v-model="form.IsValid" :value="true"> 是
               </label>
               <label class="radio-inline">
-                <input type="radio" name="inlineRadioOptions" v-model="form.IsValid" value="false"> 否
+                <input type="radio" name="inlineRadioOptions" v-model="form.IsValid" :value="false"> 否
               </label>
             </div>
           </div>
@@ -106,6 +106,7 @@
           if (v.isChecked) rights.push(v.RIGHTID)
         })
         let form = this.form
+        console.log(form)
         let postForm = {
           isvalid: Number(form.IsValid),
           mid: form.moid,
@@ -115,11 +116,13 @@
         if (this.data.type === 'add') {
           api('addRoles', postForm).then(res => {
             if (!res.data.Status) return
+            this.$emit('saveOk', '添加成功')
           })
         } else {
           postForm.roleid = form.RoleId
           api('modifyRole', postForm).then(res => {
             if (!res.data.Status) return
+            this.$emit('saveOk', '更新成功')
           })
         }
         this.$refs.modal.close()
