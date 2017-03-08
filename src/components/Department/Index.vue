@@ -1,6 +1,8 @@
 <template>
   <Container action="医院资料" :isFetching="isFetching">
+    <!-- 面包屑 -->
     <li class="action" slot="breadcrumb"><button @click="add" class="btn btn-xs btn-default">添加科室</button></li>
+    <!-- 列表 -->
     <table class="table table-bordered table-striped">
       <thead>
         <tr>
@@ -29,8 +31,13 @@
         </tr>
       </tbody>
     </table>
+    <!-- 分页 -->
     <pager :page="page" @fetch="fetch"></pager>
+    <!-- 确认框（用于启用/禁用操作） -->
     <confirm :cf="cf"></confirm>
+    <!-- 提示框 -->
+    <alert :alert="alert"></alert>
+    <!-- 添加、更新子模块 -->
     <div class="modal fade" id="modal_depart" tabindex="-1" role="dialog" data-backdrop="static">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -91,8 +98,8 @@
       </div>
       <!-- /.modal-dialog -->
     </div>
+    <!-- 权限子模块 -->
     <Right :rightInfo="rightInfo" :moid="moid" v-if="rightInfo.show"></Right>
-    <alert :alert="alert"></alert>
     <!-- /.modal -->
   </Container>
 </template>

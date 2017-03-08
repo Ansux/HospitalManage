@@ -1,5 +1,6 @@
 <template>
   <Container action="医院资料" :isFetching="isFetching">
+    <!-- 内容区 -->
     <div class="panel panel-default">
       <div class="panel-heading">更新资料</div>
       <div class="panel-body">
@@ -41,6 +42,7 @@
         </form>
       </div>
     </div>
+    <!-- 警告框 -->
     <Alert :alert="alert"></Alert>
   </Container>
 </template>
