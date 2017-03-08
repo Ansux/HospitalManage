@@ -33,7 +33,8 @@
   .content-warper {
     position: relative;
     padding: 20px;
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, .9);
+    min-height: 500px;
   }
 
 </style>

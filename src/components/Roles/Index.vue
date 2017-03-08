@@ -123,7 +123,7 @@
         }).then(res => {
           this.isFetching = false
           res = JSON.parse(res.data.Data)
-          this.totalPage = res.CountPage
+          this.page.totalPage = res.CountPage
           this.roleList = JSON.parse(res.RoleJSON)
         })
       },

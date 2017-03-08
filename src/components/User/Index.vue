@@ -21,7 +21,7 @@
           <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsValid, 'glyphicon-remove': !item.IsValid,}"></span></td>
           <td>
             <button class="btn btn-xs btn-warning" @click="update(item)">更新</button>
-            <button class="btn btn-xs btn-danger" @click="update(item)">密码重置</button>
+            <button class="btn btn-xs btn-danger" @click="resetPassword(item)">密码重置</button>
           </td>
         </tr>
       </tbody>
@@ -156,13 +156,17 @@
       </div>
       <!-- /.modal-dialog -->
     </div>
+    <Confirm :cf="cf"></Confirm>
   </Container>
 </template>
 
 <script>
   import Container from 'components/common/container'
+  import Confirm from 'components/common/confirm'
   import Pager from 'components/common/pager'
-  import {api} from 'src/api'
+  import {
+    api
+  } from 'src/api'
   export default {
     props: {
       moid: {
@@ -171,6 +175,7 @@
     },
     components: {
       Container,
+      Confirm,
       Pager
     },
     data() {
@@ -187,7 +192,8 @@
           title: '',
           type: null
         },
-        form: {}
+        form: {},
+        cf: {}
       }
     },
     created() {
@@ -302,6 +308,21 @@
           if (!res.data.Status) return
           this.fetch()
         })
+      },
+      resetPassword(user) {
+        this.cf = {
+          show: true,
+          text: `确定要将帐号【${user.UserName}】密码重置么？`,
+          ok() {
+            api('resetPassword', {
+              UserId: user.UserID,
+              NewPwd: '123456'
+            }).then(res => {
+              this.show = false
+              alert(res.data.Message)
+            })
+          }
+        }
       }
     },
     watch: {

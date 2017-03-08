@@ -48,7 +48,10 @@
 </template>
 
 <script>
-  import {api, post} from 'src/api'
+  import {
+    api,
+    post
+  } from 'src/api'
   import Container from 'components/common/container'
   import Confirm from 'components/common/confirm'
   export default {
@@ -123,7 +126,9 @@
             }
           })
         })
-        post('Login/GetRegisterCode', {MedicalOrgID: this.moid}).then(res => {
+        post('Login/GetRegisterCode', {
+          MedicalOrgID: this.moid
+        }).then(res => {
           this.registerCode = res.data
         })
       },
@@ -145,7 +150,10 @@
         }
       },
       register() {
-        post('Login/ClickRegisterCode', {MedicalOrgID: this.moid, RegisterCode: this.registerCode}).then(res => {
+        post('Login/ClickRegisterCode', {
+          MedicalOrgID: this.moid,
+          RegisterCode: this.registerCode
+        }).then(res => {
           alert(res.data)
         })
       }

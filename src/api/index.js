@@ -47,6 +47,7 @@ const apiRoutes = {
   getRolesByMedicalOrgID: 'Roles.GetRolesByMedicalOrgID',
   addUsers: 'Users.AddUsers',
   modifyUsers: 'Users.ModifyUsers',
+  resetPassword: 'User.ResetPassword',
   deleteUserRoleRange: 'Users.DleteUserRoleRange',
   // 套餐
   getExamItems: 'ExamGroup.GetExamItems',
