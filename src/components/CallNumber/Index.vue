@@ -1,5 +1,5 @@
 <template>
-  <Container action="叫号">
+  <v-container action="叫号">
     <div class="row callNumber-wraper">
       <div class="col-sm-4">
         <div class="table-warper">
@@ -15,7 +15,7 @@
               </tr>
             </tbody>
           </table>
-          <pager :page="page" @fetch="fetch"></pager>
+          <v-pager :page="page" @fetch="fetch"></v-pager>
         </div>
       </div>
       <div class="col-sm-4">
@@ -32,7 +32,7 @@
               </tr>
             </tbody>
           </table>
-          <pager :page="page2" @fetch="fetchDeviceData"></pager>
+          <v-pager :page="page2" @fetch="fetchDeviceData"></v-pager>
         </div>
       </div>
       <div class="col-sm-4">
@@ -58,12 +58,14 @@
         </div>
       </div>
     </div>
-    <alert :alert="alert"></alert>
-  </Container>
+    <v-alert :alert="alert"></v-alert>
+  </v-container>
 </template>
 
 <script>
-  import {api} from 'src/api'
+  import {
+    api
+  } from 'src/api'
   import Container from 'components/common/container'
   import Pager from 'components/common/pager'
   import Alert from 'components/common/alert'
@@ -74,9 +76,9 @@
       }
     },
     components: {
-      Container,
-      Pager,
-      Alert
+      'v-container': Container,
+      'v-pager': Pager,
+      'v-alert': Alert
     },
     data() {
       return {
@@ -128,9 +130,9 @@
           str_search: ''
         }).then((res) => {
           this.isFetching = false
-          let data = JSON.parse(res.data.Data)
-          this.page.totalPage = data.TotalPage
-          this.departmentList = JSON.parse(data.ResultList)
+          res = JSON.parse(res.data.Data)
+          this.page.totalPage = res.TotalPage
+          this.departmentList = JSON.parse(res.ResultList)
         })
       },
       fetchDeviceData() {
@@ -140,6 +142,7 @@
           pageSize: this.page2.size
         }).then(res => {
           res = JSON.parse(res.data.Data)
+          this.page2.totalPage = res.TotalPage
           this.deviceList = JSON.parse(res.ResultList)
         })
       },

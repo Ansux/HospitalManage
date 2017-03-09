@@ -1,5 +1,5 @@
 <template>
-  <Container action="客户端升级">
+  <v-container action="客户端升级">
     <table class="table table-bordered table-striped table-role">
       <thead>
         <tr>
@@ -32,22 +32,24 @@
         </tr>
       </tbody>
     </table>
-    <pager :page="page"></pager>
-    <Confirm :cf="cf"></Confirm>
-  </Container>
+    <v-pager :page="page"></v-pager>
+    <v-confirm :cf="cf"></v-confirm>
+  </v-container>
 </template>
 
 <script>
   import Container from 'components/common/container'
   import Pager from 'components/common/pager'
   import Confirm from 'components/common/confirm'
-  import {api} from 'src/api'
+  import {
+    api
+  } from 'src/api'
   export default {
     props: ['moid'],
     components: {
-      Container,
-      Pager,
-      Confirm
+      'v-container': Container,
+      'v-pager': Pager,
+      'v-confirm': Confirm
     },
     data() {
       return {
@@ -112,5 +114,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
+
 
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <Container action="系统设置">
+  <v-container action="系统设置">
     <form class="form-horizontal">
       <div class="panel panel-default">
         <div class="panel-heading">FTP地址</div>
@@ -148,8 +148,8 @@
         </div>
       </div>
     </form>
-    <Alert :alert="alert"></Alert>
-  </Container>
+    <v-alert :alert="alert"></v-alert>
+  </v-container>
 </template>
 
 <script>
@@ -163,8 +163,8 @@
       }
     },
     components: {
-      Container,
-      Alert
+      'v-container': Container,
+      'v-alert': Alert
     },
     data() {
       return {

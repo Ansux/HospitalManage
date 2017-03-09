@@ -103,11 +103,11 @@
                 <label for="" class="col-sm-3 control-label">是否启用</label>
                 <div class="col-sm-9">
                   <label class="radio-inline">
-                          <input type="radio" name="inlineRadioOptions" v-model="form.IsValid" value="true"> 是
-                        </label>
+                    <input type="radio" name="inlineRadioOptions" v-model="form.IsValid" value="true"> 是
+                  </label>
                   <label class="radio-inline">
-                          <input type="radio" name="inlineRadioOptions" v-model="form.IsValid" value="false"> 否
-                        </label>
+                    <input type="radio" name="inlineRadioOptions" v-model="form.IsValid" value="false"> 否
+                  </label>
                 </div>
               </div>
             </div>

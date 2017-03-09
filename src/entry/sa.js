@@ -1,3 +1,4 @@
+import './utils'
 import 'assets/css/bootstrap.min.css'
 import 'jquery'
 import 'assets/js/bootstrap.min'

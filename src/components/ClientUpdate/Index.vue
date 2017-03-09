@@ -1,6 +1,8 @@
 <template>
-  <Container action="客户端升级">
-    <li class="action" slot="breadcrumb"><button @click="add" class="btn btn-xs btn-default">版本升级</button></li>
+  <v-container action="客户端升级">
+    <template slot="breadcrumb">
+      <li class="action"><button @click="add" class="btn btn-xs btn-default">版本升级</button></li>
+    </template>
     <table class="table table-bordered table-striped table-role">
       <thead>
         <tr>
@@ -23,7 +25,7 @@
         </tr>
       </tbody>
     </table>
-    <pager :page="page"></pager>
+    <v-pager :page="page"></v-pager>
     <div class="modal fade" id="modal_clientUpdate" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -68,17 +70,19 @@
       </div>
       <!-- /.modal-dialog -->
     </div>
-  </Container>
+  </v-container>
 </template>
 
 <script>
   import Container from 'components/common/container'
   import Pager from 'components/common/pager'
-  import {api} from 'src/api'
+  import {
+    api
+  } from 'src/api'
   export default {
     components: {
-      Container,
-      Pager
+      'v-container': Container,
+      'v-pager': Pager
     },
     data() {
       return {
@@ -139,5 +143,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
+
 
 </style>

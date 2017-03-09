@@ -1,5 +1,5 @@
 <template>
-  <Container action="系统设置">
+  <v-container action="系统设置">
     <form class="form-horizontal">
       <div class="panel panel-default">
         <div class="panel-heading">计费设置</div>
@@ -52,8 +52,8 @@
         </div>
       </div>
     </form>
-    <Alert :alert="alert"></Alert>
-  </Container>
+    <v-alert :alert="alert"></v-alert>
+  </v-container>
 </template>
 
 <script>
@@ -67,8 +67,8 @@
       }
     },
     components: {
-      Container,
-      Alert
+      'v-container': Container,
+      'v-alert': Alert
     },
     data() {
       return {
@@ -86,7 +86,6 @@
         api('getServiceType', '').then(res => {
           res = JSON.parse(res.data.Data)
           this.serviceTypes = res
-
           // 获取云配置
           api('getMedicalOrgSetting', {
             HosID: this.moid,
@@ -144,5 +143,4 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-
 </style>

@@ -124,8 +124,7 @@
             Qualification: '',
             Call: '',
             HandPhone: '',
-            Email: '',
-            Password: ''
+            Email: ''
           }
         }
         this.$nextTick(() => {
@@ -182,6 +181,7 @@
         this.fetch()
       },
       resetPassword(user) {
+        let _this = this
         this.cf = {
           show: true,
           text: `确定要将帐号【${user.UserName}】密码重置么？`,
@@ -191,7 +191,11 @@
               NewPwd: '123456'
             }).then(res => {
               this.show = false
-              alert(res.data.Message)
+              _this.alert = {
+                show: true,
+                text: res.data.Message,
+                timer: 2000
+              }
             })
           }
         }
