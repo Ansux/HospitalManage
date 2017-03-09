@@ -20,9 +20,9 @@
           <td>{{item.RowNumber}}</td>
           <td>{{item.ClientTag}}</td>
           <td>{{item.IP}}</td>
-          <td>{{item.CreateTime}}</td>
+          <td>{{item.CreateTime|parseTime('YYYY/MM/DD')}}</td>
           <td>{{item.Version}}</td>
-          <td>{{item.VisitTime}}</td>
+          <td>{{item.VisitTime|parseTime('YYYY/MM/DD')}}</td>
           <td>{{item.VisitUser}}</td>
           <td><span class="glyphicon" :class="{'glyphicon-ok': item.OnLine, 'glyphicon-remove': !item.OnLine}"></span></td>
           <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsValid, 'glyphicon-remove': !item.IsValid}"></span></td>
