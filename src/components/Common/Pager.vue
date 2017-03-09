@@ -1,5 +1,5 @@
 <template>
-  <nav aria-label="Page navigation">
+  <nav aria-label="Page navigation" v-if="page.totalPage>1">
     <ul class="pagination">
       <li>
         <a @click="page.current !==1 && changePage(1)" aria-label="Previous">

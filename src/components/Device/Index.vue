@@ -3,7 +3,7 @@
     <template slot="breadcrumb">
       <li class="action"><button @click="add" class="btn btn-xs btn-default">添加设备</button></li>
     </template>
-    <table class="table table-bordered table-striped table-role">
+    <table class="table table-bordered table-striped table-role" v-if="deviceList.length">
       <thead>
         <tr>
           <th width="10%">序号</th>
@@ -31,6 +31,7 @@
         </tr>
       </tbody>
     </table>
+    <div class="alert alert-warning" role="alert" v-else>没有数据</div>
     <!--分页-->
     <v-pager :page="page"></v-pager>
     <!--添加、更新子模块-->

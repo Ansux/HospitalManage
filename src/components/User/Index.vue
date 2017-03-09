@@ -4,7 +4,7 @@
       <li class="action"><button @click="add" class="btn btn-xs btn-default">添加用户</button></li>
     </template>
     <!--列表-->
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped" v-if="userList.length">
       <thead>
         <tr>
           <th width="10%">序号</th>
@@ -29,6 +29,7 @@
         </tr>
       </tbody>
     </table>
+    <div class="alert alert-warning" role="alert" v-else>没有数据</div>
     <!--分页-->
     <v-pager :page="page" @fetch="fetch"></v-pager>
     <!--添加、更新子模块-->

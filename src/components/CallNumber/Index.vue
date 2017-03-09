@@ -4,7 +4,7 @@
       <div class="col-sm-4">
         <div class="table-warper">
           <div class="title">科室列表</div>
-          <table class="table table-bordered table-striped">
+          <table class="table table-bordered table-striped" v-if="departmentList.length">
             <tbody>
               <tr v-for="(item, index) in departmentList">
                 <td>
@@ -15,13 +15,14 @@
               </tr>
             </tbody>
           </table>
+          <div class="alert alert-warning" role="alert" v-else>没有数据</div>
           <v-pager :page="page" @fetch="fetch"></v-pager>
         </div>
       </div>
       <div class="col-sm-4">
         <div class="table-warper">
           <div class="title">设备列表</div>
-          <table class="table table-bordered table-striped">
+          <table class="table table-bordered table-striped" v-if="deviceList.length">
             <tbody>
               <tr v-for="(item, index) in deviceList">
                 <td>
@@ -32,6 +33,7 @@
               </tr>
             </tbody>
           </table>
+          <div class="alert alert-warning" role="alert" v-else>没有数据</div>
           <v-pager :page="page2" @fetch="fetchDeviceData"></v-pager>
         </div>
       </div>

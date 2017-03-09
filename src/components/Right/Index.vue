@@ -50,7 +50,7 @@
 <script>
   import {
     api,
-    post
+    http
   } from 'src/api'
   import Container from 'components/common/container'
   import Confirm from 'components/common/confirm'
@@ -113,8 +113,12 @@
         }).then(res => {
           res = JSON.parse(res.data.Data)
           let arrIndex = null
+          // 重置用户列表
+          this.rightList.forEach(v => {
+            v.UserList = []
+          })
           res.forEach(v => {
-            arrIndex = this.arrIndexOf(this.rightList, 'RightId', v.RIGHTID)
+            arrIndex = this.rightList.findIndexByKey('RightId', v.RIGHTID)
             if (arrIndex > -1) {
               this.rightList[arrIndex].UserList.push({
                 UserId: v.USERID,
@@ -126,7 +130,7 @@
             }
           })
         })
-        post('Login/GetRegisterCode', {
+        http('post', 'Login/GetRegisterCode', {
           MedicalOrgID: this.moid
         }).then(res => {
           this.registerCode = res.data
@@ -150,7 +154,7 @@
         }
       },
       register() {
-        post('Login/ClickRegisterCode', {
+        http('post', 'Login/ClickRegisterCode', {
           MedicalOrgID: this.moid,
           RegisterCode: this.registerCode
         }).then(res => {

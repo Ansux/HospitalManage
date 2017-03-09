@@ -10,7 +10,7 @@ let axiosConfig = {}
 if (isOnDev) {
   axiosConfig = {
     headers: {
-      'Accept': 'text/html',
+      'Accept': '*',
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
     }
   }
@@ -21,6 +21,7 @@ function qsParams(env, params) {
   return Qs.stringify(params)
 }
 
+// ESB路由映射
 const apiRoutes = {
   // 资料
   getHosByPage: 'MedicalOrg.GetHosByPage',
@@ -69,6 +70,7 @@ const apiRoutes = {
   getServiceType: 'Charge.GetServiceType'
 }
 
+// API Server专用
 export const api = (routeKey, params) => {
   return axios.post(API_URL, qsParams(isOnDev, {
     module: apiRoutes[routeKey],
@@ -76,7 +78,18 @@ export const api = (routeKey, params) => {
   }), axiosConfig)
 }
 
-export const post = (url, params) => {
+// 普通ajax请求
+export const http = (type, url, params) => {
   url = `${rootUrl}/${url}`
-  return axios.post(url, qsParams(isOnDev, params), axiosConfig)
+  return axios({
+    method: type,
+    url: url,
+    data: Qs.stringify(params),
+    config: {
+      headers: {
+        'Accept': '*',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      }
+    }
+  })
 }

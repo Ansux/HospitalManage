@@ -66,13 +66,6 @@
       this.fetchMore()
     },
     methods: {
-      indexOf(arr, key, val) {
-        let index = -1
-        arr.forEach((v, k) => {
-          if (v[key] === val) index = k
-        })
-        return index
-      },
       open() {
         this.fetch()
         return this.$refs.modal.open()
@@ -124,7 +117,7 @@
       selectDepart(item) {
         this.checkAllFlag = false
         this.currentRightName = item.RIGHTNAME
-        let index = this.indexOf(this.rights, 'rightId', item.RIGHTID)
+        let index = this.rights.findIndexByKey('rightId', item.RIGHTID)
         if (index === -1) {
           this.rights.push({
             rightId: item.RIGHTID,

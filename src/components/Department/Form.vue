@@ -1,12 +1,12 @@
 <template>
-  <v-modal :title="title" @save="save" ref="modal">
+  <v-modal :title="title" @save="save" ref="modal" :validator="validator">
     <template slot="modal-body">
       <form class="form-horizontal">
         <div class="modal-body">
           <div class="form-group">
             <label class="control-label col-sm-3">科室代码</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" v-model="form.DepartId" :disabled="type==='update'">
+              <input type="text" class="form-control" v-model="form.DepartId" :disabled="modal.type==='update'">
             </div>
           </div>
           <div class="form-group">
@@ -50,28 +50,24 @@
 </template>
 
 <script>
-  import {api} from 'src/api'
+  import {
+    api
+  } from 'src/api'
   import Modal from 'components/common/modal'
   export default {
-    props: ['data'],
+    props: ['modal'],
     components: {
       'v-modal': Modal
     },
     computed: {
-      type() {
-        return this.data.type
-      },
       title() {
-        return (this.data.type === 'add') ? '添加科室' : `【更新科室】${this.form.DepartName}`
+        return (this.modal.type === 'add') ? '添加科室' : `【更新科室】${this.form.DepartName}`
+      },
+      validator() {
+        return (!this.form.DepartId || !this.form.DepartName)
       },
       form() {
-        let data = {}
-        // 解除双向绑定
-        let form = this.data.form
-        Object.keys(form).forEach(v => {
-          data[v] = form[v]
-        })
-        return data
+        return this.modal.form
       }
     },
     methods: {
@@ -80,12 +76,12 @@
       },
       save() {
         let form = this.form
-        if (this.type === 'update') {
+        if (this.modal.type === 'update') {
           api('modifyExamDep', form).then(res => {
             if (!res.data.Status) return
             this.$emit('saveOk', '更新成功')
           })
-        } else if (this.type === 'add') {
+        } else {
           api('addExamDep', form).then(res => {
             if (!res.data.Status) return
             this.$emit('saveOk', '保存成功')

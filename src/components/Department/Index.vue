@@ -3,7 +3,7 @@
     <!-- 面包屑 -->
     <li class="action" slot="breadcrumb"><button @click="add" class="btn btn-xs btn-default">添加科室</button></li>
     <!-- 列表 -->
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped" v-if="departmentList.length">
       <thead>
         <tr>
           <th width="10%">序号</th>
@@ -30,10 +30,11 @@
         </tr>
       </tbody>
     </table>
+    <div class="alert alert-danger" role="alert" v-else>没有数据</div>
     <!-- 分页 -->
     <v-pager :page="page" @fetch="fetch"></v-pager>
     <!-- 添加、更新子模块 -->
-    <v-module-form :data="modal" ref="modal" @saveOk="saveOk" v-if="modal.render"></v-module-form>
+    <v-module-form :modal="modal" ref="modal" @saveOk="saveOk" v-if="modal.render"></v-module-form>
     <!-- 权限子模块 -->
     <v-module-right :data="rightInfo" ref="right" v-if="rightInfo.render"></v-module-right>
     <!-- 确认框（用于启用/禁用操作） -->

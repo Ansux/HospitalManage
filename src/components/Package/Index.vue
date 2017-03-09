@@ -3,7 +3,7 @@
     <template slot="breadcrumb">
       <li class="action"><button class="btn btn-xs btn-default" @click="add">添加套餐</button></li>
     </template>
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped" v-if="examGroupList.length">
       <thead>
         <tr>
           <th width="10%">序号</th>
@@ -30,6 +30,7 @@
         </tr>
       </tbody>
     </table>
+    <div class="alert alert-warning" role="alert" v-else>没有数据</div>
     <v-pager :page="page" @fetch="fetch"></v-pager>
     <!--添加、更新子模块-->
     <v-module-form :modal="modal" ref="modal" @saveOk="saveOk" v-if="modal.render"></v-module-form>

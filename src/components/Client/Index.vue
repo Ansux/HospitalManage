@@ -1,6 +1,6 @@
 <template>
   <v-container action="客户端升级">
-    <table class="table table-bordered table-striped table-role">
+    <table class="table table-bordered table-striped table-role" v-if="clientList.length">
       <thead>
         <tr>
           <th>序号</th>
@@ -32,6 +32,7 @@
         </tr>
       </tbody>
     </table>
+    <div class="alert alert-warning" role="alert" v-else>没有数据</div>
     <v-pager :page="page"></v-pager>
     <v-confirm :cf="cf"></v-confirm>
   </v-container>

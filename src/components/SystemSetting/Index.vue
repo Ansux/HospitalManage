@@ -62,17 +62,17 @@
           <div class="row">
             <div class="col-sm-3">
               <label class="checkbox-inline">
-                  <input type="checkbox" v-model="settingInfo.NurseDelete"> 护士可删除
+                  <input type="checkbox" :true-value="1" :false-value="0" v-model="settingInfo.NurseDelete"> 护士可删除
                 </label>
             </div>
             <div class="col-sm-3">
               <label class="checkbox-inline">
-                  <input type="checkbox" v-model="settingInfo.SampleDelete"> 检查医生可删除
+                  <input type="checkbox" :true-value="1" :false-value="0" v-model="settingInfo.SampleDelete"> 检查医生可删除
                 </label>
             </div>
             <div class="col-sm-3">
               <label class="checkbox-inline">
-                  <input type="checkbox" v-model="settingInfo.DiagnosisDelete"> 诊断医生可删除
+                  <input type="checkbox" :true-value="1" :false-value="0" v-model="settingInfo.DiagnosisDelete"> 诊断医生可删除
                 </label>
             </div>
           </div>
@@ -84,12 +84,12 @@
           <div class="row">
             <div class="col-sm-3">
               <label class="checkbox-inline">
-                  <input type="checkbox" v-model="settingInfo.AutoFDA"> FDA-XML
+                  <input type="checkbox" :true-value="1" :false-value="0" v-model="settingInfo.AutoFDA"> FDA-XML
                 </label>
             </div>
             <div class="col-sm-3">
               <label class="checkbox-inline">
-                  <input type="checkbox" v-model="settingInfo.AutoDCM"> DICOM
+                  <input type="checkbox" :true-value="1" :false-value="0" v-model="settingInfo.AutoDCM"> DICOM
                 </label>
             </div>
           </div>
@@ -101,44 +101,44 @@
           <div class="row">
             <div class="col-sm-3">
               <label class="checkbox-inline">
-                  <input type="checkbox" v-model="settingInfo.MatchFailAlone"> 匹配失败单独列出
+                  <input type="checkbox" :true-value="1" :false-value="0" v-model="settingInfo.MatchFailAlone"> 匹配失败单独列出
                 </label>
             </div>
             <div class="col-sm-3">
               <label class="checkbox-inline">
-                  <input type="checkbox" v-model="settingInfo.ConsultationEnabled"> 会诊开启
+                  <input type="checkbox" :true-value="1" :false-value="0" v-model="settingInfo.ConsultationEnabled"> 会诊开启
                 </label>
             </div>
             <div class="col-sm-3">
               <label class="checkbox-inline">
-                  <input type="checkbox" v-model="settingInfo.HolterEnabled"> Holter开启
+                  <input type="checkbox" :true-value="1" :false-value="0" v-model="settingInfo.HolterEnabled"> Holter开启
                 </label>
             </div>
             <div class="col-sm-3">
               <label class="checkbox-inline">
-                  <input type="checkbox" v-model="settingInfo.DoubleSignature"> 双签名
+                  <input type="checkbox" :true-value="1" :false-value="0" v-model="settingInfo.DoubleSignature"> 双签名
                 </label>
             </div>
           </div>
           <div class="row">
             <div class="col-sm-3">
               <label class="checkbox-inline">
-                  <input type="checkbox" v-model="settingInfo.FCGEnabled"> 频谱开启
+                  <input type="checkbox" :true-value="1" :false-value="0" v-model="settingInfo.FCGEnabled"> 频谱开启
                 </label>
             </div>
             <div class="col-sm-3">
               <label class="checkbox-inline">
-                  <input type="checkbox" v-model="settingInfo.HFEnabled"> 高频开启
+                  <input type="checkbox" :true-value="1" :false-value="0" v-model="settingInfo.HFEnabled"> 高频开启
                 </label>
             </div>
             <div class="col-sm-3">
               <label class="checkbox-inline">
-                  <input type="checkbox" v-model="settingInfo.CVCGEnabled"> 推算心电向量开启
+                  <input type="checkbox" :true-value="1" :false-value="0" v-model="settingInfo.CVCGEnabled"> 推算心电向量开启
                 </label>
             </div>
             <div class="col-sm-3">
               <label class="checkbox-inline">
-                  <input type="checkbox" v-model="settingInfo.QTDEnabled"> QT离散度开启
+                  <input type="checkbox" :true-value="1" :false-value="0" v-model="settingInfo.QTDEnabled"> QT离散度开启
                 </label>
             </div>
           </div>
@@ -185,30 +185,11 @@
           res = JSON.parse(res.data.Data)
           if (res && res.SystemIP) {
             res = res.SystemIP
-            res.AutoDCM = this.strToBool(res.AutoDCM)
-            res.AutoFDA = this.strToBool(res.AutoFDA)
-            res.CVCGEnabled = this.strToBool(res.CVCGEnabled)
-            res.ConsultationEnabled = this.strToBool(res.ConsultationEnabled)
-            res.DiagnosisDelete = this.strToBool(res.DiagnosisDelete)
-            res.FCGEnabled = this.strToBool(res.FCGEnabled)
-            res.HFEnabled = this.strToBool(res.HFEnabled)
-            res.HolterEnabled = this.strToBool(res.HolterEnabled)
-            res.MatchFailAlone = this.strToBool(res.MatchFailAlone)
-            res.NurseDelete = this.strToBool(res.NurseDelete)
-            res.QTDEnabled = this.strToBool(res.QTDEnabled)
-            res.SampleDelete = this.strToBool(res.SampleDelete)
-            res.DoubleSignature = this.strToBool(res.DoubleSignature)
             this.settingInfo = res
           } else {
             this.settingInfo = {}
           }
         })
-      },
-      strToBool(val) {
-        return Boolean(val - 0)
-      },
-      boolToInt(val) {
-        return Number(val)
       },
       save() {
         let setting = this.settingInfo
@@ -226,19 +207,19 @@
           FTPAddress: setting.FTPAddress,
           FTPUser: setting.FTPUser,
           FTPPwd: setting.FTPPwd,
-          AutoDCM: this.boolToInt(setting.AutoDCM),
-          AutoFDA: this.boolToInt(setting.AutoFDA),
-          CVCGEnabled: this.boolToInt(setting.CVCGEnabled),
-          ConsultationEnabled: this.boolToInt(setting.ConsultationEnabled),
-          DiagnosisDelete: this.boolToInt(setting.DiagnosisDelete),
-          FCGEnabled: this.boolToInt(setting.FCGEnabled),
-          HFEnabled: this.boolToInt(setting.HFEnabled),
-          HolterEnabled: this.boolToInt(setting.HolterEnabled),
-          MatchFailAlone: this.boolToInt(setting.MatchFailAlone),
-          NurseDelete: this.boolToInt(setting.NurseDelete),
-          QTDEnabled: this.boolToInt(setting.QTDEnabled),
-          SampleDelete: this.boolToInt(setting.SampleDelete),
-          DoubleSignature: this.boolToInt(setting.DoubleSignature)
+          AutoDCM: setting.AutoDCM,
+          AutoFDA: setting.AutoFDA,
+          CVCGEnabled: setting.CVCGEnabled,
+          ConsultationEnabled: setting.ConsultationEnabled,
+          DiagnosisDelete: setting.DiagnosisDelete,
+          FCGEnabled: setting.FCGEnabled,
+          HFEnabled: setting.HFEnabled,
+          HolterEnabled: setting.HolterEnabled,
+          MatchFailAlone: setting.MatchFailAlone,
+          NurseDelete: setting.NurseDelete,
+          QTDEnabled: setting.QTDEnabled,
+          SampleDelete: setting.SampleDelete,
+          DoubleSignature: setting.DoubleSignature
         }
         api('saveMedicalSetting', form).then(res => {
           if (!res.data.Status) true
