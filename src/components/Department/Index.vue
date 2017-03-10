@@ -1,5 +1,5 @@
 <template>
-  <v-container action="医院资料" :isFetching="isFetching">
+  <v-container action="科室" :isFetching="isFetching">
     <!-- 面包屑 -->
     <li class="action" slot="breadcrumb"><button @click="add" class="btn btn-xs btn-default">添加科室</button></li>
     <!-- 列表 -->
@@ -119,6 +119,7 @@
         this.modal = {
           render: true,
           type: 'add',
+          title: '添加科室',
           form: {
             DepartId: '',
             MedicalOrgId: this.moid,
@@ -136,6 +137,7 @@
         this.modal = {
           render: true,
           type: 'update',
+          title: `【更新科室】${item.DepartName}`,
           form: {
             DepartName: item.DepartName,
             AnotherName: item.AnotherName,
@@ -188,9 +190,3 @@
   }
 
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
-
-
-</style>

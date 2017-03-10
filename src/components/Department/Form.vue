@@ -61,7 +61,7 @@
     },
     computed: {
       title() {
-        return (this.modal.type === 'add') ? '添加科室' : `【更新科室】${this.form.DepartName}`
+        return this.modal.title
       },
       validator() {
         return (!this.form.DepartId || !this.form.DepartName)

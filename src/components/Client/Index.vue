@@ -1,5 +1,5 @@
 <template>
-  <v-container action="客户端升级">
+  <v-container action="客户端监控">
     <table class="table table-bordered table-striped table-role" v-if="clientList.length">
       <thead>
         <tr>
@@ -110,11 +110,4 @@
       }
     }
   }
-
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
-
-
-</style>

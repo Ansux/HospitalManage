@@ -100,6 +100,7 @@
         this.modal = {
           render: true,
           type: 'add',
+          title: '添加角色',
           form: {
             moid: this.moid,
             IsValid: true,
@@ -115,6 +116,7 @@
         this.modal = {
           render: true,
           type: 'update',
+          title: `【更新角色】${item.RoleName}`,
           form: {
             moid: this.moid,
             IsValid: item.IsValid,

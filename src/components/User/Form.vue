@@ -130,7 +130,7 @@
     },
     data() {
       return {
-        roles: [],
+        roleList: [],
         departments: []
       }
     },
@@ -139,13 +139,10 @@
     },
     computed: {
       title() {
-        return (this.modal.type === 'add') ? '添加用户' : `【更新用户】${this.form.UserName}`
+        return this.modal.title
       },
       form() {
         return this.modal.form
-      },
-      roleList() {
-        return this.roles
       },
       departmentList() {
         // 添加用户时设置默认的部门
@@ -167,7 +164,7 @@
         api('getRolesByMedicalOrgID', {
           medicalOrgId: this.modal.moid
         }).then(res => {
-          this.roles = JSON.parse(res.data.Data)
+          this.roleList = JSON.parse(res.data.Data)
         })
         api('getExamDeptByHosID', {
           MedicalOrgID: this.modal.moid

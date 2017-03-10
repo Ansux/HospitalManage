@@ -113,6 +113,7 @@
         this.modal = {
           render: true,
           type: 'add',
+          title: '添加用户',
           moid: this.moid,
           form: {
             UserId: null,
@@ -164,6 +165,7 @@
             this.modal = {
               render: true,
               type: 'update',
+              title: `【更新用户】${item.UserName}`,
               moid: this.moid,
               form: form
             }
@@ -208,9 +210,3 @@
   }
 
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
-
-
-</style>

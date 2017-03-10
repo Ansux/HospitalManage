@@ -125,6 +125,7 @@
         this.modal = {
           render: true,
           type: 'add',
+          title: '添加套餐',
           form: {
             medicalOrgId: moid,
             ExamGroupId: '',
@@ -142,6 +143,7 @@
         this.modal = {
           render: true,
           type: 'update',
+          title: `更新套餐【${item.ExamGroupName}】`,
           form: {
             medicalOrgId: moid,
             Cost: item.Cost,
@@ -190,11 +192,4 @@
       moid: 'fetch'
     }
   }
-
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
-
-
-</style>

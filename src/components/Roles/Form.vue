@@ -54,7 +54,7 @@
     },
     computed: {
       title() {
-        return (this.modal.type === 'add') ? '添加角色' : `【更新角色】${this.form.RoleName}`
+        return this.modal.title
       },
       form() {
         return this.modal.form

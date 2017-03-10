@@ -72,7 +72,7 @@
     },
     computed: {
       title() {
-        return (this.modal.type === 'add') ? '添加套餐' : `更新套餐【${this.form.ExamGroupName}】`
+        return this.modal.title
       },
       form() {
         return this.modal.form

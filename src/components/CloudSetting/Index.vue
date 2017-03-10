@@ -1,5 +1,5 @@
 <template>
-  <v-container action="系统设置">
+  <v-container action="云配置">
     <form class="form-horizontal">
       <div class="panel panel-default">
         <div class="panel-heading">计费设置</div>
@@ -137,11 +137,4 @@
       moid: 'fetch'
     }
   }
-
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
-
-
-</style>
