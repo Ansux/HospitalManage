@@ -103,6 +103,7 @@
           form: {
             moid: this.moid,
             IsValid: true,
+            RightId: [],
             RoleName: null
           }
         }
@@ -117,8 +118,7 @@
           form: {
             moid: this.moid,
             IsValid: item.IsValid,
-            MedicalOrgId: item.MedicalOrgId,
-            RightId: item.RightId,
+            RightId: item.RightId.split(','),
             RoleId: item.RoleId,
             RoleName: item.RoleName
           }

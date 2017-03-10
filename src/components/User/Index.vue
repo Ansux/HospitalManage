@@ -33,7 +33,7 @@
     <!--分页-->
     <v-pager :page="page" @fetch="fetch"></v-pager>
     <!--添加、更新子模块-->
-    <v-module-form :data="modal" ref="modal" @saveOk="saveOk" v-if="modal.render"></v-module-form>
+    <v-module-form :modal="modal" ref="modal" @saveOk="saveOk" v-if="modal.render"></v-module-form>
     <!--确认提示框-->
     <v-confirm :cf="cf"></v-confirm>
     <!--提示框-->

@@ -1,5 +1,5 @@
 <template>
-  <v-modal :title="title" @save="save" ref="modal" size="lg">
+  <v-modal :title="title" @save="save" ref="modal" size="lg" :validator="validator">
     <template slot="modal-body">
       <form class="form-horizontal form-user">
         <div class="modal-body">
@@ -8,7 +8,7 @@
               <div class="form-group">
                 <label for="" class="col-sm-3 control-label">用户工号</label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control" v-model="form.UserId" :disabled="type==='update'">
+                  <input type="text" class="form-control" v-model="form.UserId" :disabled="modal.type==='update'">
                 </div>
               </div>
             </div>
@@ -124,7 +124,7 @@
   } from 'src/api'
   import Modal from 'components/common/modal'
   export default {
-    props: ['data'],
+    props: ['modal'],
     components: {
       'v-modal': Modal
     },
@@ -138,30 +138,25 @@
       this.fetch()
     },
     computed: {
-      type() {
-        return this.data.type
-      },
       title() {
-        return (this.data.type === 'add') ? '添加用户' : `【更新用户】${this.form.UserName}`
+        return (this.modal.type === 'add') ? '添加用户' : `【更新用户】${this.form.UserName}`
       },
       form() {
-        let data = {}
-        // 解除双向绑定
-        let form = this.data.form
-        Object.keys(form).forEach(v => {
-          data[v] = form[v]
-        })
-        // 添加用户时设置默认的部门
-        if (!data.Departmentid && this.departmentList.length > 0) {
-          data.Departmentid = this.departmentList[0].DepartId
-        }
-        return data
+        return this.modal.form
       },
       roleList() {
         return this.roles
       },
       departmentList() {
+        // 添加用户时设置默认的部门
+        if (!this.form.Departmentid && this.departments.length > 0) {
+          this.form.Departmentid = this.departments[0].DepartId
+        }
         return this.departments
+      },
+      validator() {
+        let form = this.form
+        return (!form.UserId || !form.UserName || !form.Departmentid || !form.RoleId.length)
       }
     },
     methods: {
@@ -170,23 +165,26 @@
       },
       fetch() {
         api('getRolesByMedicalOrgID', {
-          medicalOrgId: this.data.moid
+          medicalOrgId: this.modal.moid
         }).then(res => {
           this.roles = JSON.parse(res.data.Data)
         })
         api('getExamDeptByHosID', {
-          MedicalOrgID: this.data.moid
+          MedicalOrgID: this.modal.moid
         }).then(res => {
           this.departments = JSON.parse(res.data.Data)
         })
       },
       save() {
-        let form = this.form
-        form.MedicalOrgId = this.data.moid
+        let form = {}
+        Object.keys(this.form).forEach(key => {
+          form[key] = this.form[key]
+        })
+        form.MedicalOrgId = this.modal.moid
         form.RoleId = form.RoleId.join(',')
 
         let postModule = ''
-        if (this.data.type === 'add') {
+        if (this.modal.type === 'add') {
           postModule = 'addUsers'
         } else {
           postModule = 'modifyUsers'

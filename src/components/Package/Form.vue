@@ -1,5 +1,5 @@
 <template>
-  <v-modal :title="title" @save="save" ref="modal" size="lg">
+  <v-modal :title="title" @save="save" ref="modal" size="lg" :validator="validator">
     <template slot="modal-body">
       <form class="form-horizontal form-package">
         <div class="row">
@@ -71,39 +71,23 @@
       this.fetch()
     },
     computed: {
-      type() {
-        return this.data.type
-      },
       title() {
         return (this.modal.type === 'add') ? '添加套餐' : `更新套餐【${this.form.ExamGroupName}】`
       },
       form() {
-        let data = {}
-        // 解除双向绑定
-        let form = this.modal.form
-        Object.keys(form).forEach(v => {
-          data[v] = form[v]
-        })
-        return data
+        return this.modal.form
       },
       examItemList() {
         return this.examItems
       },
       validator() {
         let form = this.form
-        return (form.ExamItems.length === 0 || form.ExamGroupId === '' || form.ExamGroupName === '' || form.Cost === '')
+        return (!form.ExamItems.length || !form.ExamGroupId || !form.ExamGroupName || !form.Cost)
       }
     },
     methods: {
       open() {
         return this.$refs.modal.open()
-      },
-      arrIndexOf(arr, key, val) {
-        let index = -1
-        arr.forEach((v, k) => {
-          if (v[key] === val) index = k
-        })
-        return index
       },
       fetch() {
         api('getExamItems', {}).then((res) => {

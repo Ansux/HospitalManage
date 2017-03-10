@@ -43,7 +43,7 @@
     props: ['brand'],
     methods: {
       logout() {
-        location.href = `${rootUrl}/Login`
+        location.href = `${rootUrl}Login`
       }
     }
   }

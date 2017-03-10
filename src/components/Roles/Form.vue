@@ -12,8 +12,8 @@
           <div class="form-group">
             <label for="" class="col-sm-2 control-label">角色权限</label>
             <div class="col-sm-10">
-              <label class="checkbox-inline" v-for="item in rightsList" :class="{'checked': item.isChecked}">
-                <input type="checkbox" :checked="item.isChecked" @change="item.isChecked=!item.isChecked"> {{item.RIGHTNAME}}
+              <label class="checkbox-inline" v-for="item in rightsList" :class="{'checked': form.RightId.indexOf(item.RIGHTID)>-1}">
+                <input type="checkbox" :value="item.RIGHTID" v-model="form.RightId"> {{item.RIGHTNAME}}
               </label>
             </div>
           </div>
@@ -46,7 +46,7 @@
     },
     data() {
       return {
-        rights: []
+        rightsList: []
       }
     },
     created() {
@@ -60,23 +60,7 @@
         return this.modal.form
       },
       validator() {
-        return (!this.form.RoleName)
-      },
-      rightsList() {
-        if (this.modal.type === 'add') {
-          this.rights.forEach(right => {
-            right.isChecked = false
-          })
-        } else {
-          let rights = this.modal.form.RightId.split(',')
-          this.rights.forEach(right => {
-            right.isChecked = false
-            rights.forEach(v => {
-              if (v === right.RIGHTID) right.isChecked = true
-            })
-          })
-        }
-        return this.rights
+        return (!this.form.RoleName || !this.form.RightId.length)
       }
     },
     methods: {
@@ -88,22 +72,15 @@
           '1': '1'
         }).then(res => {
           res = JSON.parse(res.data.Data)
-          res.forEach(v => {
-            v.isChecked = false
-          })
-          this.rights = res
+          this.rightsList = res
         })
       },
       save() {
-        let rights = []
-        this.rightsList.forEach(v => {
-          if (v.isChecked) rights.push(v.RIGHTID)
-        })
         let form = this.form
         let postForm = {
           isvalid: Number(form.IsValid),
           mid: form.moid,
-          rightID: rights,
+          rightID: form.RightId,
           rolename: form.RoleName
         }
         if (this.modal.type === 'add') {
