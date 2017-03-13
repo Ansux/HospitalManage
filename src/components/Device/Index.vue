@@ -1,9 +1,10 @@
 <template>
-  <v-container action="设备">
+  <v-container action="设备" :isFetching="isFetching">
     <template slot="breadcrumb">
       <li class="action"><button @click="add" class="btn btn-xs btn-default">添加设备</button></li>
     </template>
-    <table class="table table-bordered table-striped table-role" v-if="deviceList.length">
+    <v-notice v-if="isLoaded && deviceList.length===0"></v-notice>
+    <table class="table table-bordered table-striped table-role" v-else>
       <thead>
         <tr>
           <th width="10%">序号</th>
@@ -31,7 +32,6 @@
         </tr>
       </tbody>
     </table>
-    <div class="alert alert-warning" role="alert" v-else>没有数据</div>
     <!--分页-->
     <v-pager :page="page"></v-pager>
     <!--添加、更新子模块-->
@@ -45,6 +45,7 @@
   import Container from 'components/common/container'
   import Pager from 'components/common/pager'
   import Alert from 'components/common/alert'
+  import Notice from 'components/common/notice'
   import Form from './form'
   import {
     api
@@ -59,10 +60,13 @@
       'v-container': Container,
       'v-module-form': Form,
       'v-pager': Pager,
-      'v-alert': Alert
+      'v-alert': Alert,
+      'v-notice': Notice
     },
     data() {
       return {
+        isFetching: false,
+        isLoaded: false,
         deviceList: [],
         page: {
           current: 1,
@@ -77,16 +81,19 @@
       }
     },
     created() {
+      if (this.moid.length === 0) return
       this.fetch()
     },
     methods: {
       fetch() {
-        if (this.moid.length === 0) return
+        this.isFetching = true
         api('getDevicesByPage', {
           medicalOrgId: this.moid,
           pageIndex: this.page.current,
           pageSize: this.page.size
         }).then(res => {
+          this.isFetching = false
+          this.isLoaded = true
           res = JSON.parse(res.data.Data)
           res = JSON.parse(res.ResultList)
           this.deviceList = res
@@ -151,4 +158,5 @@
       moid: 'fetch'
     }
   }
+
 </script>

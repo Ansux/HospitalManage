@@ -15,6 +15,7 @@
     padding-top: 60px;
     font-family: 'Arial', 'Microsoft YaHei';
   }
+  
   .app {
     position: relative;
     .view-wraper {

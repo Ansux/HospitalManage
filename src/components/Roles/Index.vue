@@ -3,8 +3,9 @@
     <template slot="breadcrumb">
       <li class="action"><button @click="add" class="btn btn-xs btn-default">添加角色</button></li>
     </template>
+    <v-notice v-if="isLoaded && roleList.length===0"></v-notice>
     <!--列表-->
-    <table class="table table-bordered table-striped table-role" v-if="roleList.length">
+    <table class="table table-bordered table-striped table-role" v-else>
       <thead>
         <tr>
           <th width="10%">序号</th>
@@ -26,7 +27,6 @@
         </tr>
       </tbody>
     </table>
-    <div class="alert alert-warning" role="alert" v-else>没有数据</div>
     <!-- 分页 -->
     <v-pager :page="page" @fetch="fetch"></v-pager>
     <!--添加、更新子模块-->
@@ -40,6 +40,7 @@
   import Container from 'components/common/container'
   import Pager from 'components/common/pager'
   import Alert from 'components/common/alert'
+  import Notice from 'components/common/notice'
   import Form from './form'
   import {
     api
@@ -50,11 +51,13 @@
       'v-container': Container,
       'v-pager': Pager,
       'v-alert': Alert,
-      'v-module-form': Form
+      'v-module-form': Form,
+      'v-notice': Notice
     },
     data() {
       return {
         isFetching: false,
+        isLoaded: false,
         roleList: [],
         page: {
           current: 1,
@@ -91,6 +94,7 @@
           userPageSize: this.page.size
         }).then(res => {
           this.isFetching = false
+          this.isLoaded = true
           res = JSON.parse(res.data.Data)
           this.page.totalPage = res.CountPage
           this.roleList = JSON.parse(res.RoleJSON)

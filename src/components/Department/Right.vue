@@ -16,7 +16,7 @@
             <div class="panel-heading">
               <span>科室分配</span>
               <span v-if="currentRightName">【{{currentRightName}}】</span>
-              <label class="checkbox-inline checked-all" @click="checkAll">
+              <label class="checkbox-inline checked-all" @click.prevent="checkAll">
                 <input type="checkbox" v-model="checkAllFlag" :disabled="!currentRightName"> 全选
               </label>
             </div>
@@ -67,6 +67,9 @@
     },
     methods: {
       open() {
+        // 数据初始化
+        this.currentRightName = null
+        this.departs = []
         this.fetch()
         return this.$refs.modal.open()
       },
@@ -144,6 +147,7 @@
         } else {
           this.departs = []
         }
+        console.log(this.checkAllFlag)
         this.departChange()
       },
       departChange() {

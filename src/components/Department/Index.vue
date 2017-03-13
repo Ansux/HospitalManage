@@ -1,9 +1,12 @@
 <template>
   <v-container action="科室" :isFetching="isFetching">
     <!-- 面包屑 -->
-    <li class="action" slot="breadcrumb"><button @click="add" class="btn btn-xs btn-default">添加科室</button></li>
+    <template slot="breadcrumb">
+      <li class="action"><button @click="add" class="btn btn-xs btn-default">添加科室</button></li>
+    </template>
+    <v-notice v-if="isLoaded && departmentList.length===0"></v-notice>
     <!-- 列表 -->
-    <table class="table table-bordered table-striped" v-if="departmentList.length">
+    <table class="table table-bordered table-striped" v-else>
       <thead>
         <tr>
           <th width="10%">序号</th>
@@ -30,7 +33,6 @@
         </tr>
       </tbody>
     </table>
-    <div class="alert alert-danger" role="alert" v-else>没有数据</div>
     <!-- 分页 -->
     <v-pager :page="page" @fetch="fetch"></v-pager>
     <!-- 添加、更新子模块 -->
@@ -52,6 +54,7 @@
   import Pager from 'components/common/pager'
   import Confirm from 'components/common/confirm'
   import Alert from 'components/common/alert'
+  import Notice from 'components/common/notice'
   import Right from './right'
   import Form from './form'
   export default {
@@ -66,12 +69,14 @@
       'v-alert': Alert,
       'v-confirm': Confirm,
       'v-module-form': Form,
-      'v-module-right': Right
+      'v-module-right': Right,
+      'v-notice': Notice
     },
     data() {
       return {
         isFetching: false,
-        departmentList: [],
+        isLoaded: false,
+        departmentList: '',
         page: {
           current: 1,
           size: 5,
@@ -86,9 +91,6 @@
         cf: {},
         rightInfo: {}
       }
-    },
-    watch: {
-      moid: 'fetch'
     },
     created() {
       if (this.moid.length === 0) return
@@ -110,6 +112,7 @@
           str_search: ''
         }).then((res) => {
           this.isFetching = false
+          this.isLoaded = true
           let data = JSON.parse(res.data.Data)
           this.page.totalPage = data.TotalPage
           this.departmentList = JSON.parse(data.ResultList)
@@ -186,6 +189,9 @@
           this.$refs.right.open()
         })
       }
+    },
+    watch: {
+      moid: 'fetch'
     }
   }
 

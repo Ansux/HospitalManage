@@ -107,7 +107,7 @@
       }
     },
     watch: {
-      moid: ['fetch', 'fetchDeviceData', 'fetchSettingData']
+      moid: 'loadData'
     },
     created() {
       if (this.moid.length === 0) return
@@ -123,6 +123,11 @@
       }
     },
     methods: {
+      loadData() {
+        this.fetch()
+        this.fetchDeviceData()
+        this.fetchSettingData()
+      },
       fetch() {
         this.isFetching = true
         api('getDeptByPage', {

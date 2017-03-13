@@ -1,10 +1,11 @@
 <template>
-  <v-container action="用户">
+  <v-container action="用户" :isFetching="isFetching">
     <template slot="breadcrumb">
       <li class="action"><button @click="add" class="btn btn-xs btn-default">添加用户</button></li>
     </template>
+    <v-notice v-if="isLoaded && userList.length===0"></v-notice>
     <!--列表-->
-    <table class="table table-bordered table-striped" v-if="userList.length">
+    <table class="table table-bordered table-striped" v-else>
       <thead>
         <tr>
           <th width="10%">序号</th>
@@ -29,7 +30,6 @@
         </tr>
       </tbody>
     </table>
-    <div class="alert alert-warning" role="alert" v-else>没有数据</div>
     <!--分页-->
     <v-pager :page="page" @fetch="fetch"></v-pager>
     <!--添加、更新子模块-->
@@ -46,6 +46,7 @@
   import Confirm from 'components/common/confirm'
   import Alert from 'components/common/alert'
   import Pager from 'components/common/pager'
+  import Notice from 'components/common/notice'
   import Form from './form'
   import {
     api
@@ -61,10 +62,13 @@
       'v-module-form': Form,
       'v-confirm': Confirm,
       'v-alert': Alert,
-      'v-pager': Pager
+      'v-pager': Pager,
+      'v-notice': Notice
     },
     data() {
       return {
+        isFetching: false,
+        isLoaded: false,
         userList: [],
         roleList: null,
         departmentList: null,
@@ -83,6 +87,7 @@
       }
     },
     created() {
+      if (this.moid.length === 0) return
       this.fetch()
     },
     computed: {
@@ -97,13 +102,15 @@
     },
     methods: {
       fetch() {
-        if (this.moid.length === 0) return
+        this.isFetching = true
         api('getUsersByPage', {
           medicalOrgId: this.moid,
           pageIndex: this.page.current,
           pageSize: this.page.size,
           str_search: ''
         }).then(res => {
+          this.isFetching = false
+          this.isLoaded = true
           res = JSON.parse(res.data.Data)
           this.page.totalPage = res.TotalPage
           this.userList = JSON.parse(res.ResultList)
@@ -205,7 +212,7 @@
       }
     },
     watch: {
-      moid: ['fetch']
+      moid: 'fetch'
     }
   }
 
