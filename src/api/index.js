@@ -26,6 +26,7 @@ const apiRoutes = {
   // 资料
   getHosByPage: 'MedicalOrg.GetHosByPage',
   getMedicalOrgByOrgID: 'MedicalOrg.GetMedicalOrgByOrgID',
+  addMedicalOrg: 'MedicalOrg.AddMedicalOrg',
   modifyMedicalOrg: 'MedicalOrg.ModifyMedicalOrg',
   getUsersByRightIdAndDepartmentId: 'Rights.GetUsersByRightIdAndDepartmentId',
   // 科室

@@ -14,8 +14,8 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="menu">
           <slot name="front-menuItems"></slot>
-          <router-link tag="li" to="/Department"><a>科室</a></router-link>
           <router-link tag="li" to="/Right"><a>权限</a></router-link>
+          <router-link tag="li" to="/Department"><a>科室</a></router-link>
           <router-link tag="li" to="/Roles"><a>角色</a></router-link>
           <router-link tag="li" to="/User"><a>用户</a></router-link>
           <slot name="back-menuItems"></slot>

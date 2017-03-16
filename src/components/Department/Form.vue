@@ -22,17 +22,6 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-3">是否启用</label>
-            <div class="col-sm-9">
-              <label class="radio-inline">
-                <input type="radio" value="true" v-model="form.IsValid"> 是
-              </label>
-              <label class="radio-inline">
-                <input type="radio" value="false" v-model="form.IsValid"> 否
-              </label>
-            </div>
-          </div>
-          <div class="form-group">
             <label class="control-label col-sm-3">可否检查</label>
             <div class="col-sm-9">
               <label class="radio-inline">
@@ -40,6 +29,17 @@
               </label>
               <label class="radio-inline">
                 <input type="radio" value="false" v-model="form.IsSampleDep"> 否
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-3">是否启用</label>
+            <div class="col-sm-9">
+              <label class="radio-inline">
+                <input type="radio" value="true" v-model="form.IsValid"> 是
+              </label>
+              <label class="radio-inline">
+                <input type="radio" value="false" v-model="form.IsValid"> 否
               </label>
             </div>
           </div>

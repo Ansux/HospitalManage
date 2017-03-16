@@ -1,5 +1,8 @@
 <template>
   <v-container action="医院资料" :isFetching="isFetching">
+    <template slot="breadcrumb">
+      <li class="action"><button @click="add" class="btn btn-xs btn-default">添加医院</button></li>
+    </template>
     <!-- 内容区 -->
     <div class="panel panel-default">
       <div class="panel-heading">更新资料</div>
@@ -36,21 +39,26 @@
           </div>
           <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9">
-              <button type="button" class="btn btn-success" :disabled="validator" @click="save">保存</button>
+              <button type="button" class="btn btn-success" :disabled="validator" @click="saveUpdate">保存</button>
             </div>
           </div>
         </form>
       </div>
     </div>
+    <!--添加、更新子模块-->
+    <v-module-form :modal="modal" ref="modal" @saveOk="saveOk" v-if="modal.render"></v-module-form>
     <!-- 警告框 -->
     <v-alert :alert="alert"></v-alert>
   </v-container>
 </template>
 
 <script>
-  import {api} from 'src/api'
+  import {
+    api
+  } from 'src/api'
   import Container from 'components/common/container'
   import Alert from 'components/common/alert'
+  import Form from './form'
   export default {
     props: {
       moid: {
@@ -59,13 +67,18 @@
     },
     components: {
       'v-alert': Alert,
-      'v-container': Container
+      'v-container': Container,
+      'v-module-form': Form
     },
     data() {
       return {
         isFetching: false,
         medicalOrg: {},
-        alert: {}
+        alert: {},
+        modal: {
+          type: null,
+          form: {}
+        }
       }
     },
     created() {
@@ -100,7 +113,21 @@
           }
         })
       },
-      save() {
+      add() {
+        this.modal = {
+          render: true,
+          form: {
+            MedicalOrgId: '',
+            MedicalOrgName: '',
+            ESBPath: '',
+            IsValid: true
+          }
+        }
+        this.$nextTick(() => {
+          this.$refs.modal.open()
+        })
+      },
+      saveUpdate() {
         api('modifyMedicalOrg', this.medicalOrg).then(res => {
           if (res.data.Status) {
             $('.nav-menu').find(`a[data-id=${this.medicalOrg.MedicalOrgId}]`).text(this.medicalOrg.MedicalOrgName)
@@ -111,6 +138,14 @@
             }
           }
         })
+      },
+      saveOk(msg) {
+        this.alert = {
+          show: true,
+          text: msg,
+          timer: 2000
+        }
+        location.reload()
       }
     },
     watch: {
@@ -122,4 +157,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
+
+
 </style>

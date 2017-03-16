@@ -129,7 +129,7 @@
             DepartName: '',
             AnotherName: '',
             IsValid: true,
-            IsSampleDep: false
+            IsSampleDep: true
           }
         }
         this.$nextTick(() => {

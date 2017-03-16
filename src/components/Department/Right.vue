@@ -8,7 +8,7 @@
             <div class="panel-body">
               <span class="checkbox-inline" v-for="item in rightList">
                 <input type="checkbox" :value="item.RIGHTID" v-model="form.rightIds">
-                <label @click="selectDepart(item)">{{item.RIGHTNAME}}</label>
+                <label class="label-rightName" @click="selectDepart(item)">{{item.RIGHTNAME}}</label>
               </span>
             </div>
           </div>
@@ -189,6 +189,9 @@
       }
       label {
         font-weight: normal;
+        &.label-rightName {
+          cursor: pointer;
+        }
       }
     }
   }
