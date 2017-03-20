@@ -115,7 +115,7 @@
         api('getExamDeptByHosID', {
           MedicalOrgID: this.modal.moid
         }).then(res => {
-          this.departments = JSON.parse(res.data.Data)
+          this.departments = res.data.Data ? JSON.parse(res.data.Data) : []
         })
         api('getDeviceTypes', {}).then(res => {
           this.deviceTypes = JSON.parse(res.data.Data)

@@ -162,22 +162,6 @@
         }
         this.fetch()
       },
-      // remove(item) {
-      //   this.cf = {
-      //     show: true,
-      //     text: `确定要禁用【${item.DepartId}】么？`,
-      //     ok: () => {
-      //       api('deleteExamDep', {
-      //         DepartId: item.DepartId,
-      //         MedicalOrgId: this.moid
-      //       }).then(res => {
-      //         if (!res.data.Status) return
-      //         item.IsValid = false
-      //         this.cf.show = false
-      //       })
-      //     }
-      //   }
-      // },
       right(item) {
         this.rightInfo = {
           render: true,

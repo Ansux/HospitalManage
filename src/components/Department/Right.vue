@@ -1,5 +1,5 @@
 <template>
-  <v-modal size="lg" :title="title" ref="modal" @save="save">
+  <v-modal size="lg" id="rightModal" :title="title" ref="modal" @save="save">
     <template slot="modal-body">
       <form class="form-horizontal form-right">
         <div class="modal-body">
@@ -147,7 +147,6 @@
         } else {
           this.departs = []
         }
-        console.log(this.checkAllFlag)
         this.departChange()
       },
       departChange() {

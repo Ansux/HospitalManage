@@ -86,6 +86,7 @@
     },
     methods: {
       fetch() {
+        this.modal.render = false
         this.isFetching = true
         api('getDevicesByPage', {
           medicalOrgId: this.moid,
