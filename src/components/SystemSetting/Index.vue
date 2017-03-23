@@ -96,6 +96,24 @@
         </div>
       </div>
       <div class="panel panel-default">
+        <div class="panel-heading">动态血压</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-4">
+              <label class="col-sm-4 control-label">设备厂商: </label>
+              <div class="col-sm-8">
+                <label class="radio-inline">
+                  <input type="radio" name="ABPModel" value="AiXun" v-model="settingInfo.ABPModel">艾讯
+                </label>
+                  <label class="radio-inline">
+                  <input type="radio" name="ABPModel" value="HingMed" v-model="settingInfo.ABPModel">星脉
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
         <div class="panel-heading">功能设置</div>
         <div class="panel-body">
           <div class="row">
@@ -153,7 +171,9 @@
 </template>
 
 <script>
-  import {api} from 'src/api'
+  import {
+    api
+  } from 'src/api'
   import Container from 'components/common/container'
   import Alert from 'components/common/alert'
   export default {
@@ -219,7 +239,8 @@
           NurseDelete: setting.NurseDelete,
           QTDEnabled: setting.QTDEnabled,
           SampleDelete: setting.SampleDelete,
-          DoubleSignature: setting.DoubleSignature
+          DoubleSignature: setting.DoubleSignature,
+          ABPModel: setting.ABPModel
         }
         api('saveMedicalSetting', form).then(res => {
           if (!res.data.Status) true
@@ -235,4 +256,5 @@
       moid: 'fetch'
     }
   }
+
 </script>
