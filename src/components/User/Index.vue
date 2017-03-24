@@ -4,34 +4,37 @@
       <li class="action"><button @click="add" class="btn btn-xs btn-default">添加用户</button></li>
     </template>
     <v-notice v-if="isLoaded && userList.length===0"></v-notice>
-    <!--列表-->
-    <table class="table table-bordered table-striped" v-else>
-      <thead>
-        <tr>
-          <th width="10%">序号</th>
-          <th>用户名</th>
-          <th width="30%">姓名</th>
-          <th width="30%">所属科室</th>
-          <th width="80">是否可用</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, index) in userList">
-          <td>{{item.Row}}</td>
-          <td>{{item.UserName}}</td>
-          <td>{{item.RealName}}</td>
-          <td>{{item.DepartName}}</td>
-          <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsValid, 'glyphicon-remove': !item.IsValid,}"></span></td>
-          <td>
-            <button class="btn btn-xs btn-warning" @click="update(item)">更新</button>
-            <button class="btn btn-xs btn-danger" @click="resetPassword(item)">密码重置</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <!--分页-->
-    <v-pager :page="page" @fetch="fetch"></v-pager>
+    <div class="list-container" v-else>
+      <v-search @search="search"></v-search>
+      <!--列表-->
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th width="10%">序号</th>
+            <th>用户名</th>
+            <th width="30%">姓名</th>
+            <th width="30%">所属科室</th>
+            <th width="80">是否可用</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in userList">
+            <td>{{item.Row}}</td>
+            <td>{{item.UserName}}</td>
+            <td>{{item.RealName}}</td>
+            <td>{{item.DepartName}}</td>
+            <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsValid, 'glyphicon-remove': !item.IsValid,}"></span></td>
+            <td>
+              <button class="btn btn-xs btn-warning" @click="update(item)">更新</button>
+              <button class="btn btn-xs btn-danger" @click="resetPassword(item)">密码重置</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!--分页-->
+      <v-pager :page="page" @fetch="fetch"></v-pager>
+    </div>
     <!--添加、更新子模块-->
     <v-module-form :modal="modal" ref="modal" @saveOk="saveOk" v-if="modal.render"></v-module-form>
     <!--确认提示框-->
@@ -43,6 +46,7 @@
 
 <script>
   import Container from 'components/common/container'
+  import Search from 'components/common/search'
   import Confirm from 'components/common/confirm'
   import Alert from 'components/common/alert'
   import Pager from 'components/common/pager'
@@ -59,6 +63,7 @@
     },
     components: {
       'v-container': Container,
+      'v-search': Search,
       'v-module-form': Form,
       'v-confirm': Confirm,
       'v-alert': Alert,
@@ -72,6 +77,7 @@
         userList: [],
         roleList: null,
         departmentList: null,
+        keyword: '',
         page: {
           current: 1,
           size: 5,
@@ -107,7 +113,7 @@
           medicalOrgId: this.moid,
           pageIndex: this.page.current,
           pageSize: this.page.size,
-          str_search: ''
+          str_search: this.keyword
         }).then(res => {
           this.isFetching = false
           this.isLoaded = true
@@ -115,6 +121,10 @@
           this.page.totalPage = res.TotalPage
           this.userList = JSON.parse(res.ResultList)
         })
+      },
+      search(kw) {
+        this.keyword = kw
+        this.fetch()
       },
       add() {
         this.modal = {

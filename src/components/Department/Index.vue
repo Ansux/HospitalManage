@@ -5,40 +5,43 @@
       <li class="action"><button @click="add" class="btn btn-xs btn-default">添加科室</button></li>
     </template>
     <v-notice v-if="isLoaded && departmentList.length===0"></v-notice>
-    <!-- 列表 -->
-    <table class="table table-bordered table-striped" v-else>
-      <thead>
-        <tr>
-          <th width="10%">序号</th>
-          <th>科室名称</th>
-          <th>英文名称</th>
-          <th width="12%">添加时间</th>
-          <th width="10%">是否可用</th>
-          <th width="10%">可否检查</th>
-          <th width="20%">操作</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, index) in departmentList">
-          <td>{{item.Row}}</td>
-          <td>{{item.DepartName}}</td>
-          <td>{{item.AnotherName}}</td>
-          <td>{{item.CreateTime?item.CreateTime.substr(0,10):null}}</td>
-          <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsValid, 'glyphicon-remove': !item.IsValid}"></span></td>
-          <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsSampleDep, 'glyphicon-remove': !item.IsSampleDep}"></span></td>
-          <td>
-            <button type="button" @click="right(item)" class="btn btn-xs btn-primary">分配权限</button>
-            <button type="button" @click="update(item)" class="btn btn-xs btn-warning">更新</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- 分页 -->
-    <v-pager :page="page" @fetch="fetch"></v-pager>
+    <div class="list-container" v-else>
+      <v-search @search="search"></v-search>
+      <!-- 列表 -->
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th width="10%">序号</th>
+            <th>科室名称</th>
+            <th>英文名称</th>
+            <th width="12%">添加时间</th>
+            <th width="10%">是否可用</th>
+            <th width="10%">可否检查</th>
+            <th width="20%">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in departmentList">
+            <td>{{item.Row}}</td>
+            <td>{{item.DepartName}}</td>
+            <td>{{item.AnotherName}}</td>
+            <td>{{item.CreateTime?item.CreateTime.substr(0,10):null}}</td>
+            <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsValid, 'glyphicon-remove': !item.IsValid}"></span></td>
+            <td><span class="glyphicon" :class="{'glyphicon-ok': item.IsSampleDep, 'glyphicon-remove': !item.IsSampleDep}"></span></td>
+            <td>
+              <button type="button" @click="right(item)" class="btn btn-xs btn-primary">分配权限</button>
+              <button type="button" @click="update(item)" class="btn btn-xs btn-warning">更新</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- 分页 -->
+      <v-pager :page="page" @fetch="fetch"></v-pager>
+      <!-- 权限子模块 -->
+      <v-module-right :data="rightInfo" ref="right" v-if="rightInfo.render"></v-module-right>
+    </div>
     <!-- 添加、更新子模块 -->
     <v-module-form :modal="modal" ref="modal" @saveOk="saveOk" v-if="modal.render"></v-module-form>
-    <!-- 权限子模块 -->
-    <v-module-right :data="rightInfo" ref="right" v-if="rightInfo.render"></v-module-right>
     <!-- 确认框（用于启用/禁用操作） -->
     <v-confirm :cf="cf"></v-confirm>
     <!-- 提示框 -->
@@ -51,6 +54,7 @@
     api
   } from 'src/api'
   import Container from 'components/common/container'
+  import Search from 'components/common/search'
   import Pager from 'components/common/pager'
   import Confirm from 'components/common/confirm'
   import Alert from 'components/common/alert'
@@ -65,6 +69,7 @@
     },
     components: {
       'v-container': Container,
+      'v-search': Search,
       'v-pager': Pager,
       'v-alert': Alert,
       'v-confirm': Confirm,
@@ -77,6 +82,7 @@
         isFetching: false,
         isLoaded: false,
         departmentList: '',
+        keyword: '',
         page: {
           current: 1,
           size: 5,
@@ -109,7 +115,7 @@
           medicalOrgId: this.moid,
           pageIndex: this.page.current,
           pageSize: this.page.size,
-          str_search: ''
+          str_search: this.keyword
         }).then((res) => {
           this.isFetching = false
           this.isLoaded = true
@@ -117,6 +123,10 @@
           this.page.totalPage = data.TotalPage
           this.departmentList = JSON.parse(data.ResultList)
         })
+      },
+      search(kw) {
+        this.keyword = kw
+        this.fetch()
       },
       add() {
         this.modal = {
