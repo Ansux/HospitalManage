@@ -33,7 +33,7 @@
       </tbody>
     </table>
     <div class="alert alert-warning" role="alert" v-else>没有数据</div>
-    <v-pager :page="page"></v-pager>
+    <v-pager :page="page" @changePageSize="changePageSize" @fetch="fetch"></v-pager>
     <v-confirm :cf="cf"></v-confirm>
   </v-container>
 </template>
@@ -57,7 +57,7 @@
         clientList: [],
         page: {
           current: 1,
-          size: 5,
+          size: 10,
           totalPage: 1
         },
         cf: {}
@@ -90,6 +90,11 @@
           this.totalPage = res.TotalPage
           this.clientList = JSON.parse(res.ResultList)
         })
+      },
+      changePageSize(size) {
+        this.page.current = 1
+        this.page.size = size
+        this.fetch()
       },
       update(item) {
         let text = item.IsValid ? '禁用' : '启用'

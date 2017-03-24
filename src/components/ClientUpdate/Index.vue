@@ -25,7 +25,7 @@
         </tr>
       </tbody>
     </table>
-    <v-pager :page="page"></v-pager>
+    <v-pager :page="page" @changePageSize="changePageSize" @fetch="fetch"></v-pager>
     <div class="modal fade" id="modal_clientUpdate" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -95,7 +95,7 @@
         },
         page: {
           current: 1,
-          size: 5,
+          size: 10,
           totalPage: 1
         }
       }
@@ -124,6 +124,11 @@
           this.totalPage = res.TotalPage
           this.clientList = JSON.parse(res.ResultList)
         })
+      },
+      changePageSize(size) {
+        this.page.current = 1
+        this.page.size = size
+        this.fetch()
       },
       add() {
         $('#modal_clientUpdate').modal()

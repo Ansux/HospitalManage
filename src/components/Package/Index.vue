@@ -31,7 +31,7 @@
         </tr>
       </tbody>
     </table>
-    <v-pager :page="page" @fetch="fetch"></v-pager>
+    <v-pager :page="page" @changePageSize="changePageSize" @fetch="fetch"></v-pager>
     <!--添加、更新子模块-->
     <v-module-form :modal="modal" ref="modal" @saveOk="saveOk" v-if="modal.render"></v-module-form>
     <v-confirm :cf="cf"></v-confirm>
@@ -70,7 +70,7 @@
         examGroupList: [],
         page: {
           current: 1,
-          size: 5,
+          size: 10,
           totalPage: 1
         },
         modal: {
@@ -118,6 +118,11 @@
           })
           this.examGroupList = tempArr
         })
+      },
+      changePageSize(size) {
+        this.page.current = 1
+        this.page.size = size
+        this.fetch()
       },
       examItemsStr(item) {
         let tempStr = ''

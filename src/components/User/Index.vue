@@ -33,7 +33,7 @@
         </tbody>
       </table>
       <!--分页-->
-      <v-pager :page="page" @fetch="fetch"></v-pager>
+      <v-pager :page="page" @changePageSize="changePageSize" @fetch="fetch"></v-pager>
     </div>
     <!--添加、更新子模块-->
     <v-module-form :modal="modal" ref="modal" @saveOk="saveOk" v-if="modal.render"></v-module-form>
@@ -80,7 +80,7 @@
         keyword: '',
         page: {
           current: 1,
-          size: 5,
+          size: 10,
           totalPage: 1
         },
         modal: {
@@ -124,6 +124,11 @@
       },
       search(kw) {
         this.keyword = kw
+        this.fetch()
+      },
+      changePageSize(size) {
+        this.page.current = 1
+        this.page.size = size
         this.fetch()
       },
       add() {

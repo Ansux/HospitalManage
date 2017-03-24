@@ -33,7 +33,7 @@
       </tbody>
     </table>
     <!--分页-->
-    <v-pager :page="page"></v-pager>
+    <v-pager :page="page" @changePageSize="changePageSize" @fetch="fetch"></v-pager>
     <!--添加、更新子模块-->
     <v-module-form :modal="modal" ref="modal" @saveOk="saveOk" v-if="modal.render"></v-module-form>
     <!--提示框-->
@@ -70,7 +70,7 @@
         deviceList: [],
         page: {
           current: 1,
-          size: 5,
+          size: 10,
           totalPage: 1
         },
         modal: {
@@ -99,6 +99,11 @@
           res = JSON.parse(res.ResultList)
           this.deviceList = res
         })
+      },
+      changePageSize(size) {
+        this.page.current = 1
+        this.page.size = size
+        this.fetch()
       },
       add() {
         this.modal = {
