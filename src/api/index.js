@@ -26,6 +26,7 @@ const apiRoutes = {
   // 资料
   getHosByPage: 'MedicalOrg.GetHosByPage',
   getMedicalOrgByOrgID: 'MedicalOrg.GetMedicalOrgByOrgID',
+  getMedicalOrgList: 'MedicalOrg.GetMedicalOrgList',
   addMedicalOrg: 'MedicalOrg.AddMedicalOrg',
   modifyMedicalOrg: 'MedicalOrg.ModifyMedicalOrg',
   getUsersByRightIdAndDepartmentId: 'Rights.GetUsersByRightIdAndDepartmentId',
@@ -37,6 +38,7 @@ const apiRoutes = {
   getExamDeptByHosID: 'Department.GetExamDeptByHosID',
   getDepartmentRightById: 'DepartmentRight.GetDepartmentRightById',
   modifyDepartmentRight: 'DepartmentRight.ModifyDepartmentRight',
+  getConsultationRelation: 'WSConsultation.GetConsultationRelation',
   // 角色
   getUsersByPage: 'BackUser.GetUsersByPage',
   getRoleByMidPage: 'Roles.GetRoleByMidPage',
