@@ -28,7 +28,7 @@
         MedicalOrgList: [],
         page: {
           current: 1,
-          size: 20,
+          size: 200,
           count: 10,
           load() {
             console.log(this.current)

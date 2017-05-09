@@ -2,6 +2,7 @@ import Right from 'components/Right/Index'
 import Department from 'components/Department/Index'
 import Roles from 'components/Roles/Index'
 import User from 'components/User/Index'
+import Device from 'components/Device/Index'
 
 const routes = [
   {
@@ -23,6 +24,11 @@ const routes = [
     path: '/User',
     name: 'User',
     component: User
+  },
+  {
+    path: '/Device',
+    name: 'Device',
+    component: Device
   }
 ]
 

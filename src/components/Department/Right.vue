@@ -7,9 +7,9 @@
           <div class="panel panel-default">
             <div class="panel-heading">权限分配</div>
             <div class="panel-body">
-              <span class="checkbox-inline" v-for="item in rightList">
-                <input type="checkbox" :value="item.RIGHTID" v-model="form.rightIds">
-                <label class="label-rightName" @click="selectDepart(item)">{{item.RIGHTNAME}}</label>
+              <span class="checkbox-inline" v-for="(item, index) in rightList">
+                <input type="checkbox" v-model="item.isChecked">
+                <label class="label-rightName" @click="selectDepart(index, item)">{{item.RIGHTNAME}}</label>
               </span>
             </div>
           </div>
@@ -58,7 +58,6 @@
         form: {},
         departs: [],
         rightIndex: null,
-        rights: [],
         currentRight: {},
         checkAllFlag: false,
         orgList: [],
@@ -75,94 +74,70 @@
     },
     methods: {
       open() {
-        // 数据初始化
-        this.departs = []
-        // 数据请求
-        this.fetch()
-        // 检测是否需要重新请求更多数据（此法作用于减少HTTP请求）
-        if (!this.moid || this.moid !== this.data.moid) {
-          this.moid = this.data.moid
-          this.fetchMore()
+        this.form = {
+          DepartId: this.data.DepartId,
+          DepartName: this.data.DepartName
         }
-        return this.$refs.modal.open()
+        this.departs = []
+        this.orgs = []
+        this.$refs.modal.open()
+        this.fetchDefault(this.fetch)
       },
       fetch() {
-        let depart = this.data
         api('getDepartmentRightById', {
-          departmentid: depart.DepartId,
-          hospitalId: depart.moid
+          departmentid: this.data.DepartId,
+          hospitalId: this.data.moid
         }).then(res => {
           if (res.data.Data !== '') {
             res = JSON.parse(res.data.Data)
-          } else {
-            res = []
-          }
-
-          let tempArr = []
-          res.forEach(v => {
-            tempArr.push({
-              rightId: v.rigth_id,
-              departIds: v.depart_id.split(',')
+            let index = 0
+            res.forEach(v => {
+              index = this.rightList.findIndexByKey('RIGHTID', v.rigth_id)
+              this.rightList[index].isChecked = true
+              this.rightList[index].departIds = v.depart_id.split(',')
             })
-          })
-          this.rights = tempArr
-
-          this.form = {
-            DepartId: depart.DepartId,
-            DepartName: depart.DepartName,
-            rightIds: (() => {
-              let tempArr = []
-              res.forEach(v => {
-                tempArr.push(v.rigth_id)
-              })
-              return tempArr
-            })()
           }
+          this.selectDepart(0, this.rightList[0])
         })
       },
-      fetchMore() {
+      fetchDefault(callback) {
         this.isFetching = true
-        this.rightList = []
-        this.departList = []
         // 获取权限列表
         api('getRights', {}).then(res => {
-          this.rightList = JSON.parse(res.data.Data)
-          // 获取科室下的医院列表
+          let rightList = JSON.parse(res.data.Data)
+          rightList.forEach(v => {
+            v.isChecked = false
+            v.departIds = []
+          })
+          this.rightList = rightList
+          // 获取科室列表
           api('getExamDeptByHosID', {
             MedicalOrgID: this.data.moid
           }).then(res => {
             this.departList = JSON.parse(res.data.Data)
+            callback()
             this.isFetching = false
           })
         })
       },
-      selectDepart(item) {
+      selectDepart(index, item) {
+        this.rightIndex = index
         this.checkAllFlag = false
         this.currentRight = item
-        let index = this.rights.findIndexByKey('rightId', item.RIGHTID)
-        if (index === -1) {
-          this.rights.push({
-            rightId: item.RIGHTID,
-            departIds: []
-          })
-        }
-        this.departs = []
-        this.rights.forEach((v, k) => {
-          if (v.rightId === item.RIGHTID) {
-            this.departs = v.departIds
-            this.rightIndex = k
-          }
-        })
-        if (item.RIGHTID === 'ECG007' && this.orgList.length === 0) {
-          api('getConsultationRelation', {MedicalOrgID: this.moid, DepartID: this.data.DepartId}).then(res => {
+        this.departs = item.departIds
+        if (item.RIGHTID === 'ECG007') {
+          api('getConsultationRelation', {MedicalOrgID: this.data.moid, DepartID: this.data.DepartId}).then(res => {
             let orgs = res.data.Data === '' ? [] : JSON.parse(res.data.Data)
+            console.log(orgs)
             orgs.forEach(v => {
-              this.orgs.push(v.ConsultationMedicalOrgID)
+              this.orgs.push(v.RequestMedicalOrgID)
             })
           })
-          api('getMedicalOrgList', {}).then(res => {
-            this.orgList = JSON.parse(res.data.Data)
-          })
+          if (this.orgList.length === 0) {
+            api('getMedicalOrgList', {}).then(res => {
+              this.orgList = JSON.parse(res.data.Data)
+            })
+          }
         }
       },
       checkAll() {
@@ -179,40 +154,72 @@
               tempArr.push(v.Row)
             }
           })
-          this.departs = tempArr
-          if (isConsult) this.orgs = tempArr
+          if (isConsult) {
+            this.orgs = tempArr
+          } else {
+            this.departs = tempArr
+          }
         } else {
-          this.departs = []
-          if (isConsult) this.orgs = []
+          if (isConsult) {
+            this.orgs = []
+          } else {
+            this.departs = []
+          }
         }
-        this.departChange()
+        if (isConsult) {
+          this.orgChange()
+        } else {
+          this.departChange()
+        }
       },
       departChange() {
-        this.rights[this.rightIndex].departIds = this.departs
+        this.rightList[this.rightIndex].departIds = this.departs
       },
       orgChange() {
-        this.rights[this.rightIndex].departIds = this.orgs
+        this.rightList[this.rightIndex].departIds = this.orgs
       },
       save() {
         let form = {
+          data: '',
           hospitalId: this.data.moid,
-          departmentid: this.data.DepartId,
-          data: ''
+          departmentid: this.data.DepartId
         }
         let tempArr = []
-        this.rights.forEach(v => {
-          tempArr.push(JSON.stringify({
-            right_id: v.rightId,
-            Chliddeparts_id: v.departIds.join(',')
-          }))
+        this.rightList.forEach(v => {
+          if (v.isChecked) {
+            if (v.RIGHTID !== 'ECG007') {
+              tempArr.push(JSON.stringify({
+                right_id: v.RIGHTID,
+                Chliddeparts_id: v.departIds.join(',')
+              }))
+            }
+          }
         })
-        console.log(this.rights)
-        form.data = tempArr.join('@')
-
-        api('modifyDepartmentRight', form).then(res => {
-          if (!res.data.Status) return
-          this.$refs.modal.close()
-        })
+        if (tempArr.length > 0) {
+          form.data = tempArr.join('@')
+          api('modifyDepartmentRight', form).then(res => {
+            callback(this.data.DepartId, this.data.moid)
+            if (!res.data.Status) {
+              alert(res.data.Message)
+            }
+            this.$refs.modal.close()
+          })
+        } else {
+          if (this.orgs.length === 0) {
+            alert('没有任何修改！')
+          }
+        }
+        if (this.orgs.length > 0) {
+          api('setConsultationRelation', {MedicalOrgID: this.data.moid, DepartID: this.data.DepartId, ConsultationMedicalOrgID: this.orgs.join(',')}).then(res => {
+            console.log(res)
+            this.$refs.modal.close()
+          })
+        }
+        function callback(departId, moid) {
+          api('clearSettingDataByDepartmentID', {DepartmentId: departId, MedicaLOrgId: moid}).then(res => {
+            console.log(res)
+          })
+        }
       }
     }
   }

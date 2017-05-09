@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import MedicalOrg from 'components/MedicalOrg/Index'
-import Device from 'components/Device/Index'
 import CallNumber from 'components/CallNumber/Index'
 import Package from 'components/Package/Index'
 import Client from 'components/Client/Index'
@@ -15,11 +14,6 @@ import routes from './index'
 Vue.use(Router)
 
 let Routes = routes.concat([
-  {
-    path: '/Device',
-    name: 'Device',
-    component: Device
-  },
   {
     path: '/CallNumber',
     name: 'CallNumber',

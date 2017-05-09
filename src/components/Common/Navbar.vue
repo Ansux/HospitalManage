@@ -18,6 +18,7 @@
           <router-link tag="li" to="/Department"><a>科室</a></router-link>
           <router-link tag="li" to="/Roles"><a>角色</a></router-link>
           <router-link tag="li" to="/User"><a>用户</a></router-link>
+          <router-link tag="li" to="/Device"><a>设备</a></router-link>
           <slot name="back-menuItems"></slot>
         </ul>
         <ul class="nav navbar-nav navbar-right">

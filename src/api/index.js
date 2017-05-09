@@ -39,6 +39,8 @@ const apiRoutes = {
   getDepartmentRightById: 'DepartmentRight.GetDepartmentRightById',
   modifyDepartmentRight: 'DepartmentRight.ModifyDepartmentRight',
   getConsultationRelation: 'WSConsultation.GetConsultationRelation',
+  setConsultationRelation: 'WSConsultation.SetConsultationRelation',
+  clearSettingDataByDepartmentID: 'User.ClearSettingDataByDepartmentID',
   // 角色
   getUsersByPage: 'BackUser.GetUsersByPage',
   getRoleByMidPage: 'Roles.GetRoleByMidPage',
