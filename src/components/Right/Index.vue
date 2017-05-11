@@ -36,7 +36,7 @@
       </thead>
       <tbody>
         <tr v-for="(right, rIndex) in rightList">
-          <td>{{right.RightName}}</td>
+          <td>{{right.RightName}}/{{right.count}}</td>
           <td>
             <span v-for="(user, uIndex) in right.UserList" class="user-item">{{user.RealName}} <i class="glyphicon glyphicon-remove" @click="deleteUser(user.UserId, user.RoleId, rIndex, uIndex)"></i></span>
           </td>
@@ -70,22 +70,26 @@
           {
             RightId: 'ECG002',
             RightName: '采集',
-            UserList: []
+            UserList: [],
+            count: 0
           },
           {
             RightId: 'ECG003',
             RightName: '诊断',
-            UserList: []
+            UserList: [],
+            count: 0
           },
           {
             RightId: 'ECG004',
             RightName: '学术',
-            UserList: []
+            UserList: [],
+            count: 0
           },
           {
             RightId: 'ECG006',
             RightName: '统计',
-            UserList: []
+            UserList: [],
+            count: 0
           }
         ],
         registerCode: '',
@@ -111,6 +115,9 @@
         api('getUsersByRightIdAndDepartmentId', {
           MedicalOrgID: this.moid
         }).then(res => {
+          if (res.data.Data === '') {
+            return
+          }
           res = JSON.parse(res.data.Data)
           let arrIndex = null
           // 重置用户列表
@@ -134,6 +141,24 @@
           MedicalOrgID: this.moid
         }).then(res => {
           this.registerCode = res.data
+          http('post', 'Login/LicenceNo', {
+            RegisterCode: this.registerCode
+          }).then(res => {
+            res = res.data
+            if (JSON.stringify(res) === '{}') {
+              this.rightList.forEach(v => {
+                v.count = 0
+              })
+            } else {
+              this.rightList.forEach(v => {
+                if (res[v.RightId]) {
+                  v.count = res[v.RightId]
+                } else {
+                  v.count = 0
+                }
+              })
+            }
+          })
         })
       },
       deleteUser(userId, roleId, rIndex, uIndex) {

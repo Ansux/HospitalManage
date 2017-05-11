@@ -15,7 +15,15 @@
     },
     methods: {
       search() {
-        this.$emit('search', this.kw)
+        this.$emit('search', this.kw, true)
+      }
+    },
+    watch: {
+      kw(val) {
+        this.$emit('search', val, false)
+      },
+      keyword(val) {
+        this.kw = val
       }
     }
   }

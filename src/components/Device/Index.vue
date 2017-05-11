@@ -96,6 +96,7 @@
           this.isFetching = false
           this.isLoaded = true
           res = JSON.parse(res.data.Data)
+          this.page.totalPage = res.TotalPage
           res = JSON.parse(res.ResultList)
           this.deviceList = res
         })

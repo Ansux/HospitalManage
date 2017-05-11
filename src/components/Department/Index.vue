@@ -4,9 +4,9 @@
     <template slot="breadcrumb">
       <li class="action"><button @click="add" class="btn btn-xs btn-default">添加科室</button></li>
     </template>
+    <v-search @search="search" :keyword="keyword"></v-search>
     <v-notice v-if="isLoaded && departmentList.length===0"></v-notice>
     <div class="list-container" v-else>
-      <v-search @search="search"></v-search>
       <!-- 列表 -->
       <table class="table table-bordered table-striped">
         <thead>
@@ -124,9 +124,11 @@
           this.departmentList = JSON.parse(data.ResultList)
         })
       },
-      search(kw) {
+      search(kw, isFetch) {
         this.keyword = kw
-        this.fetch()
+        if (isFetch) {
+          this.fetch()
+        }
       },
       changePageSize(size) {
         this.page.current = 1
@@ -187,10 +189,14 @@
         this.$nextTick(() => {
           this.$refs.right.open()
         })
+      },
+      watch() {
+        this.keyword = ''
+        this.fetch()
       }
     },
     watch: {
-      moid: 'fetch'
+      moid: 'watch'
     }
   }
 
